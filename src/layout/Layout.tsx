@@ -11,7 +11,7 @@ const Layout = () => {
     <div className="flex h-svh">
 
         <aside 
-            className="w-[276px] border-r! border-(--chakra-colors-border)! flex flex-col gap-4"
+            className="w-0 overflow-hidden xl:w-[276px] border-0! xl:border-r! border-(--chakra-colors-border)! flex flex-col gap-4"
         >
             
             <div className="h-[50px] grid place-items-center">
