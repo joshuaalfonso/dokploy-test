@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-google: "Google Sans Flex", sans-serif; 
+}
+
+* {
+  @apply font-google
+}
+
+
+.rkk-column, .rkk-column-header{
+  @apply bg-(--chakra-colors-bg)! 
+}
+
+.rkk-column-header, .rkk-column-header-left, .rkk-column-header-right {
+ @apply text-(--chakra-colors-fg-muted)!  
+}
+
+.rkk-column-header-left, .rkk-column-header-right {
+  @apply text-sm!
+}
+
+
+.rkk-skeleton {
+  @apply bg-(--chakra-colors-bg-muted)!  border-(--chakra-colors-border)!
+}
+
+
+/* .rkk-skeleton-title, .rkk-skeleton-description, .rkk-skeleton-line {
+  @apply bg-blue-500!
+} */
