@@ -10,5 +10,10 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths()
   ],
+
+  preview: {
+    host: true,
+    allowedHosts: ['frontend.skadii-dev.org']
+  }
   
 })
