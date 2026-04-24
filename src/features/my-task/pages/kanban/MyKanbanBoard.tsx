@@ -13,7 +13,7 @@ const MyKanbanBoard  = () => {
       root: {
         id: "root",
         title: "Root",
-        children: ["col-1", "col-2", "col-3"],
+        children: ["col-1", "col-2", "col-3", "col-4"],
         totalChildrenCount: 3,
         parentId: null,
       },
@@ -27,12 +27,19 @@ const MyKanbanBoard  = () => {
       "col-2": {
         id: "col-2",
         title: "In Progress",
-        children: ["task-3"],
+        children: ["task-5"],
         totalChildrenCount: 1,
         parentId: "root",
       },
       "col-3": {
         id: "col-3",
+        title: "In Review",
+        children: ["task-3"],
+        totalChildrenCount: 1,
+        parentId: "root",
+      },
+      "col-4": {
+        id: "col-4",
         title: "Done",
         children: ["task-4"],
         totalChildrenCount: 1,
@@ -74,6 +81,18 @@ const MyKanbanBoard  = () => {
         totalChildrenCount: 0,
         type: "card",
       },
+      "task-5": {
+        id: "task-5",
+        title: "Dialog close button",
+        parentId: "col-2",
+        children: [],
+        totalChildrenCount: 0,
+        type: "card",
+        content: {
+          description: "Make it subtle",
+          priority: "high",
+        },
+      },
     });
 
    const configMap = {
@@ -100,7 +119,7 @@ const MyKanbanBoard  = () => {
     
          <div >
             <Kanban
-              rootStyle={{ backgroundColor: "red !important", padding: "20px 0" }}
+              rootStyle={{ padding: "20px 0" }}
               dataSource={dataSource}
               configMap={configMap}
               onCardMove={(move) => {

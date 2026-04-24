@@ -28,6 +28,16 @@
 }
 
 
+.rkk-board {
+  @apply grid! gap-4 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]
+}
+
+
+.rkk-column-outer {
+  @apply max-w-full!
+}
+
+
 /* .rkk-skeleton-title, .rkk-skeleton-description, .rkk-skeleton-line {
   @apply bg-blue-500!
 } */
