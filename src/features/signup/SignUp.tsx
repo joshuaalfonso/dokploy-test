@@ -1,7 +1,9 @@
 import { PasswordInput } from "@/components/ui/password-input"
 import { Button, Center, Field, Fieldset, Input, Stack, Text } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useSignUp } from "./hooks/useSignUp"
+import { toaster } from "@/components/ui/toaster"
 
 
 interface FormValues {
@@ -12,15 +14,35 @@ interface FormValues {
 
 const SignUp = () => {
 
+    const { signUpMutation, isSigningUp } = useSignUp();
+
+    const navigate = useNavigate();
+
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<FormValues>();
 
 
     const onSubmit = handleSubmit((data: FormValues) => {
-        console.log(data)
+        // console.log(data)
+
+        signUpMutation(
+            data,
+            {
+                onSuccess: (response) => {
+                    navigate('/log-in')
+                    toaster.create({
+                        title: "Success",
+                        description: response.message,
+                    })
+                    reset();
+                }
+            }
+        );
+
     })
 
 
@@ -43,6 +65,7 @@ const SignUp = () => {
                         <Field.Root>
                             <Field.Label>Full Name</Field.Label>
                             <Input 
+                                variant={'subtle'}
                                 {
                                     ...register(
                                         "full_name", 
@@ -66,6 +89,7 @@ const SignUp = () => {
                         <Field.Root>
                             <Field.Label>Email</Field.Label>
                             <Input 
+                                variant={'subtle'}
                                 {
                                     ...register(
                                         "email", 
@@ -91,6 +115,7 @@ const SignUp = () => {
                         <Field.Root>
                             <Field.Label>Password</Field.Label>
                             <PasswordInput 
+                                variant={'subtle'}
                                 placeholder="" 
                                 size="md" 
                                 {
@@ -108,9 +133,10 @@ const SignUp = () => {
                                 </Text>
                             )}
                         </Field.Root>
+
                     </Fieldset.Content>
 
-                    <Button type="submit" >
+                    <Button type="submit" loading={isSigningUp}>
                         Register
                     </Button>
 

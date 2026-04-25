@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react"
+import { Heading, Stack, Text } from "@chakra-ui/react"
 
 
 
@@ -10,9 +10,12 @@ const Project = () => {
   return (
     <>
     
-        <Heading size={'md'} mb={10}>
-            Project
-        </Heading>
+        <Stack mb={10}>
+            <Heading>
+                Project
+            </Heading>
+            <Text fontSize={'sm'} color={'fg.muted'}>List of all project for this workspace</Text>
+        </Stack>
 
 
 

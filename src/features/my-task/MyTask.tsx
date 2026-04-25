@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react"
+import { Heading, Stack, Text } from "@chakra-ui/react"
 import MyKanbanBoard from "./pages/kanban/MyKanbanBoard"
 
 
@@ -13,9 +13,14 @@ const MyTask = () => {
         <>
         
         
-            <Heading size={'md'} fontWeight={'light'} mb={10}>
-                My Task
-            </Heading>
+            <Stack mb={10}>
+                <Heading>
+                    My Task
+                </Heading>
+                <Text fontSize={'sm'} color={'fg.muted'}>
+                    List of all your tasks for this workspace
+                </Text>
+            </Stack>
 
 
             <MyKanbanBoard />
