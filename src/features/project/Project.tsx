@@ -20,25 +20,25 @@ const Project = () => {
 
             <li className="border! rounded-md px-6! py-4!">
                 <h1 className="font-sm! font-medium! mb-1!">Title</h1>
-                <p className="text-sm! text-(--chakra-colors-fg-subtle)!">
+                <p className="text-sm! text-(--chakra-colors-fg-muted)!">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </p>
             </li>
             <li className="border! rounded-md px-6! py-4!">
                 <h1 className="font-sm! font-medium! mb-1!">Title</h1>
-                <p className="text-sm! text-(--chakra-colors-fg-subtle)!">
+                <p className="text-sm! text-(--chakra-colors-fg-muted)!">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </p>
             </li>
             <li className="border! rounded-md px-6! py-4!">
                 <h1 className="font-sm! font-medium! mb-1!">Title</h1>
-                <p className="text-sm! text-(--chakra-colors-fg-subtle)!">
+                <p className="text-sm! text-(--chakra-colors-fg-muted)!">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </p>
             </li>
             <li className="border! rounded-md px-6! py-4!">
                 <h1 className="font-sm! font-medium! mb-1!">Title</h1>
-                <p className="text-sm! text-(--chakra-colors-fg-subtle)!">
+                <p className="text-sm! text-(--chakra-colors-fg-muted)!">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </p>
             </li>
