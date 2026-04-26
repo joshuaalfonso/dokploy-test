@@ -11,7 +11,7 @@ import { LuLogOut } from 'react-icons/lu'
 
 const Header = () => {
 
-    const user = useAuthStore(store => store.user);
+    // const user = useAuthStore(store => store.user);
     const logout = useAuthStore(store => store.logout);
 
     return (
@@ -21,7 +21,7 @@ const Header = () => {
                 <SwitchWorkspace />
                 
                 <div className='flex items-center gap-3'>
-                    <h1 className='text-base! text-(--chakra-colors-fg-muted)!'>{ user?.full_name }</h1>
+                    {/* <h1 className='text-base! text-(--chakra-colors-fg-muted)!'>{ user?.full_name }</h1> */}
                     <ColorModeButton />
                     <IconButton 
                         size={'sm'} 

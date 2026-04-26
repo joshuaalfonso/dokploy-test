@@ -3,11 +3,16 @@ import { useWorkspaceByUser } from "@/features/workspace/hooks/useWorkspace"
 import { Button, createListCollection, Listbox, Popover, Portal, Separator, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { LuChevronDown, LuPlus } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 
 const SwitchWorkspace = () => {
 
+    const [open, setOpen] = useState(false)
+
     const user = useAuthStore((store) => store.user);
+
+    const navigate = useNavigate();
 
     const defaultStore = user ? user.default_workspace : null;
 
@@ -20,14 +25,26 @@ const SwitchWorkspace = () => {
 
     const [selectedWorkspace, setSelectedWorkspace] = useState<string[]>([String(defaultStore)]);
 
+    const activeWorkspace = user_workspaces?.find(
+        (ws) => String(ws.workspace_id) === selectedWorkspace[0]
+    );
+
+
     if (isPending) return <>Loading...</>;
     if (error) return <>Failed to load</>
 
     return (
-        <Popover.Root  lazyMount unmountOnExit positioning={{ placement: "bottom-start" }}>
+        <Popover.Root  
+            lazyMount 
+            unmountOnExit 
+            positioning={{ placement: "bottom-start" }}
+            open={open} onOpenChange={(e) => setOpen(e.open)}
+        >
             <Popover.Trigger asChild>
-                <Button size={'xs'} variant={'plain'}>
-                    <h1 className='text-sm! text-(--chakra-colors-fg-muted)!'>Joshua Alfonso's Workspace</h1>
+                <Button size={'xs'} variant={'plain'} px={0}>
+                    <h1 className='text-sm! text-(--chakra-colors-fg-muted)!'>
+                        {activeWorkspace?.workspace_name ?? "Select workspace"}
+                    </h1>
                     <LuChevronDown />
                 </Button>
             </Popover.Trigger>
@@ -44,8 +61,11 @@ const SwitchWorkspace = () => {
                             width="full" 
                             variant={'plain'}
                             onValueChange={(details) => {
-                                setSelectedWorkspace(details.value)
-                                console.log(details.value)
+                                const newWorkspaceId = details.value[0];
+                                setSelectedWorkspace(details.value);
+
+                                navigate(`/workspace/${newWorkspaceId}/dashboard`);
+                                setOpen(false)
                             }}
                             p={0}
                         >
