@@ -22,6 +22,7 @@ const AuthLayout = () => {
       </Box>
 
       <Box
+        minH={'svh'}
         px={6}
       >
         <Outlet />

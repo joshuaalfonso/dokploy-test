@@ -12,6 +12,7 @@ import ProtectedRoute from './shared/components/ProtectedRoute'
 import { Toaster } from './components/ui/toaster'
 import PublicRoute from './shared/components/PublicRoute'
 import DefaultRoute from './shared/components/DefaultRoute'
+import EmailVerification from './features/email-verification/EmailVerification'
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route element={<PublicRoute><AuthLayout /></PublicRoute>}>
           <Route path="log-in" element={<LogIn />} />
           <Route path="sign-up" element={<SignUp />} />
+          <Route path="verification" element={<EmailVerification />} />
         </Route>
 
       </Routes>
