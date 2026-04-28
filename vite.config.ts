@@ -14,6 +14,11 @@ export default defineConfig({
   preview: {
     host: true,
     allowedHosts: ['frontend.skadii-dev.org']
+  },
+
+  server: {
+    host: true, // or '0.0.0.0'
+    port: 5173
   }
   
 })

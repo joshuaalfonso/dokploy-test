@@ -33,7 +33,7 @@ const SignUp = () => {
             data,
             {
                 onSuccess: (response) => {
-                    navigate('/log-in')
+                    navigate('/verification')
                     toaster.create({
                         title: "Success",
                         description: response.message,
