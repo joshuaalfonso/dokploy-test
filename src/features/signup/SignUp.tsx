@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { useSignUp } from "./hooks/useSignUp"
 import { toaster } from "@/components/ui/toaster"
+import { getApiErrorMessage } from "@/lib/errorMessage"
 
 
 interface FormValues {
@@ -39,6 +40,14 @@ const SignUp = () => {
                         description: response.message,
                     })
                     reset();
+                    localStorage.setItem("verifyEmail", data.email);
+                },
+                onError: (err) => {
+                    toaster.create({
+                        title: 'Error',
+                        description: getApiErrorMessage(err),
+                        type: 'error'
+                    })
                 }
             }
         );

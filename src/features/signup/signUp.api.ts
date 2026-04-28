@@ -12,6 +12,8 @@ export const signUpApi = async (newItem: CreateUser) => {
   return res.data;
 }
 
+
+
 // export const getUser = async (id: number): Promise<User> => {
 //   const res = await api.get(`/users/${id}`);
 //   return res.data;

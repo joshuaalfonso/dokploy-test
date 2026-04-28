@@ -82,7 +82,7 @@ const SwitchWorkspace = () => {
                         <Separator />
 
                         <Button 
-                            size={'xs'}
+                            size={'xs'}                                                                                
                             variant={'ghost'}
                             color={'fg.muted'}
                         >
