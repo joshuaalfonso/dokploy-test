@@ -41,3 +41,43 @@
 /* .rkk-skeleton-title, .rkk-skeleton-description, .rkk-skeleton-line {
   @apply bg-blue-500!
 } */
+
+
+
+.rmg-gantt-chart, .rmg-title  {
+  @apply text-(--chakra-colors-fg)!
+}
+
+.rmg-task-row, .rmg-timeline-grid {
+  @apply px-4!
+}
+
+.rmg-view-mode-button, .rmg-task-list-header, .rmg-timeline-unit  {
+  @apply text-(--chakra-colors-fg-muted)!
+}
+
+.rmg-gantt-chart, 
+.rmg-task-list, 
+.rmg-header, 
+.rmg-task-list-header, 
+.rmg-timeline-unit, 
+.rmg-task-group, 
+.rmg-task-group-content, 
+.rmg-timeline-header, 
+.rmg-task-row, 
+.rmg-view-mode-selector,
+.rmg-view-mode-button,
+.rmg-timeline-grid,
+.rmg-timeline-header-higher
+{
+  @apply bg-(--chakra-colors-bg)! border-(--chakra-colors-border)! 
+}
+
+.rmg-gantt-chart {
+  @apply shadow-none!
+}
+
+
+.rmg-view-mode-button-active {
+  @apply bg-(--chakra-colors-bg-inverted)! text-(--chakra-colors-fg-inverted)!
+}
