@@ -2,8 +2,9 @@ import { useAuthStore } from "@/auth-layout/store/useAuthStore";
 import { useWorkspaceByUser } from "@/features/workspace/hooks/useWorkspace"
 import { Button, createListCollection, Listbox, Popover, Portal, Separator, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { LuChevronDown, LuPlus } from "react-icons/lu";
+import { LuChevronDown } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import WorkspaceDialog from "./dialog/WorkspaceDialog";
 
 
 const SwitchWorkspace = () => {
@@ -81,14 +82,16 @@ const SwitchWorkspace = () => {
 
                         <Separator />
 
-                        <Button 
+                        {/* <Button 
                             size={'xs'}                                                                                
                             variant={'ghost'}
                             color={'fg.muted'}
                         >
                             <LuPlus />
                             Add workspace
-                        </Button>
+                        </Button> */}
+
+                        <WorkspaceDialog />
 
                     </Popover.Body>
                 </Popover.Content>

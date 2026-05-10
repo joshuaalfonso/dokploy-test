@@ -12,3 +12,10 @@ export interface Workspace {
   created_at: string
   role: string
 }
+
+
+
+export interface CreateWorkspace {
+  workspace_name: Workspace['workspace_name'],
+  description: Workspace['description']
+}
