@@ -2,16 +2,15 @@
 
 
 
-
+export type ProjectStatus =  | 'planning' | 'active' | 'inactive' | 'completed';
 
 export interface CreateProject {
     workspace_id: number
     project_name: string
-    project_description: string
+    project_description: string,
+    status: ProjectStatus
 }
 
-
-export type ProjectStatus = | 'draft' | 'planning' | 'active' | 'on hold' | 'completed'
 
 export interface Project {
     project_id: number
@@ -22,4 +21,13 @@ export interface Project {
     status: ProjectStatus
     created_by: number
     created_at: string
+}
+
+
+
+export type ProjectQuery = {
+  cursor?: string | null
+  search?: string
+  status?: string 
+  sort?: 'asc' | 'desc'
 }

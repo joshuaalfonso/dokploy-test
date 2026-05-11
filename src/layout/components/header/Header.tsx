@@ -15,7 +15,7 @@ const Header = () => {
     const logout = useAuthStore(store => store.logout);
 
     return (
-        <header className="sticky top-0 left-0 w-full px-8! md:px-16! h-13.5 border-b! bg-(--chakra-colors-bg)">
+        <header className="sticky top-0 left-0 w-full px-8! md:px-16! h-13.5 border-b! bg-(--chakra-colors-bg) z-10!">
             <div className="flex items-center justify-between gap-3 w-full! h-full">
 
                 <SwitchWorkspace />

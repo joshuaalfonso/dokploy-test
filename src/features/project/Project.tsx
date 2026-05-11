@@ -1,9 +1,13 @@
 import {  Button, EmptyState, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react"
 import { useProjectDialogStore } from "./store/projectDialogStore"
 import ProjectDialog from "./components/dialog/ProjectDialog";
-import { useProjectByWorkspace } from "./hooks/useProject";
-import ProjectCardList from "./components/card/ProjectCardList";
+import { usePaginatedProject } from "./hooks/useProject";
+import { useProjectParams } from "./hooks/useProjectParams";
 import { LuFolderArchive } from "react-icons/lu";
+import ProjectCardList from "./components/card/ProjectCardList";
+// import { useProjectByWorkspace } from "./hooks/useProject";
+// import ProjectCardList from "./components/card/ProjectCardList";
+// import { LuFolderArchive } from "react-icons/lu";
 
 
 
@@ -11,10 +15,17 @@ const Project = () => {
 
     const setOpen  = useProjectDialogStore(state => state.setCreateModalOpen);
 
-    const { user_project, isPending, error } = useProjectByWorkspace();
+    // const { user_project, isPending, error } = useProjectByWorkspace();
+
+    const { filters, setFilters } = useProjectParams()
+
+    const { data, isPending, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaginatedProject(filters)
 
     if (isPending) return <p>Loading...</p>;
     if (error) return <p>Failed to load project</p>;
+
+      const projects =
+        data?.pages.flatMap((p) => p.data) ?? []
 
     return (
         <>
@@ -29,7 +40,7 @@ const Project = () => {
                 <Button onClick={() => setOpen(true)}>Create</Button>
             </Flex>
 
-            { user_project?.length === 0 ? (
+            { projects.length === 0 ? (
                 <EmptyState.Root>
                     <EmptyState.Content>
                         <EmptyState.Indicator>
@@ -43,7 +54,19 @@ const Project = () => {
                         </VStack>
                     </EmptyState.Content>
                 </EmptyState.Root>
-            ) :  <ProjectCardList items={ user_project ?? [] } /> }
+            ) :  (
+                <>
+                    <ProjectCardList items={ projects ?? [] } />
+                     <Button
+                        onClick={() => fetchNextPage()}
+                        disabled={!hasNextPage}
+                    >
+                        {isFetchingNextPage
+                        ? 'Loading...'
+                        : 'Load more'}
+                    </Button>
+                </>
+            ) }
 
             <ProjectDialog />
         

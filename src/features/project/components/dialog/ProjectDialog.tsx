@@ -1,16 +1,19 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { CreateProject } from "../../project.model";
+import type { CreateProject, ProjectStatus } from "../../project.model";
 import { useCreateProject } from "../../hooks/useCreateProject";
 import { toaster } from "@/components/ui/toaster";
 import { getApiErrorMessage } from "@/lib/errorMessage";
 import { Button, Dialog, Field, Fieldset, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
 import { useProjectDialogStore } from "../../store/projectDialogStore";
 import { useParams } from "react-router-dom";
+import { projectStatus } from "@/shared/data/projectStatus";
+import { RHFSelect } from "@/shared/components/RFHSelect";
 
 
 type ProjectFormValues = {
     project_name: CreateProject['project_name'],
-    project_description: CreateProject['project_description']
+    project_description: CreateProject['project_description'],
+    status: ProjectStatus
 }
 
 
@@ -24,12 +27,14 @@ const ProjectDialog = () => {
     const {
         register,
         handleSubmit,
+        control,
         reset,
         formState: { errors, isSubmitting }
     } = useForm<ProjectFormValues>({
         defaultValues: {
             project_name: '',
-            project_description: ''
+            project_description: '',
+            status: 'active'
         }
     });
     
@@ -153,6 +158,23 @@ const ProjectDialog = () => {
                                                 </Field.ErrorText>
                                             )}
                                         </Field.Root>
+                                        
+                                        <Field.Root 
+                                            required
+                                            invalid={Boolean(errors.project_description)}
+                                        >
+                                            <Field.Label>
+                                                Status
+                                                <Field.RequiredIndicator />
+                                            </Field.Label>
+                                            <RHFSelect<ProjectFormValues>
+                                                name="status"
+                                                control={control}
+                                                options={projectStatus}
+                                                placeholder="Select status"
+                                                error={errors.status?.message}
+                                            />
+                                        </Field.Root>
 
                                     </Fieldset.Content>
 
@@ -188,5 +210,7 @@ const ProjectDialog = () => {
     )
 
 }
+
+
 
 export default ProjectDialog
