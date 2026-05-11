@@ -16,7 +16,7 @@ const Layout = () => {
 
             <Header />
 
-            <main className="px-16! py-5!">
+            <main className="px-8! md:px-16! py-7!">
                 <Outlet />
             </main>
 

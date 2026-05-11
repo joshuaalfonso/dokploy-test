@@ -24,6 +24,7 @@ const ProjectDialog = () => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting }
     } = useForm<ProjectFormValues>({
         defaultValues: {
@@ -52,7 +53,9 @@ const ProjectDialog = () => {
                     toaster.create({
                         title: 'Success',
                         description: response.message ?? 'Successfully created'
-                    })
+                    });
+                    reset();
+                    setOpen(false)
                 },
                 onError: (err) => {
                     toaster.create({
@@ -138,11 +141,15 @@ const ProjectDialog = () => {
                                                 placeholder="" 
                                                 {...register("project_description", {
                                                     required: "This field is required",
+                                                    minLength: {
+                                                        value: 10,
+                                                        message: "At least 10 characters"
+                                                    }
                                                 })}
                                             />
-                                            { errors.project_name && (
+                                            { errors.project_description && (
                                                 <Field.ErrorText>
-                                                    { errors.project_name?.message }
+                                                    { errors.project_description?.message }
                                                 </Field.ErrorText>
                                             )}
                                         </Field.Root>

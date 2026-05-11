@@ -23,6 +23,8 @@ export const useWorkspaceByUser = () => {
     const { data: user_workspaces, isPending, error } = useQuery({
         queryKey: ['workspaces', user_id],
         queryFn: () => getWorkspaceByUserApi(user_id!),
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10,
         enabled: !!user_id
     })
 

@@ -13,6 +13,8 @@ import { Toaster } from './components/ui/toaster'
 import PublicRoute from './shared/components/PublicRoute'
 import DefaultRoute from './shared/components/DefaultRoute'
 import EmailVerification from './features/email-verification/EmailVerification'
+import WorkspaceMember from './features/workspace-member/WorkspaceMember'
+import WorkspaceSetting from './features/workspace-setting/WorkspaceSetting'
 
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="project" element={<Project />} />
             <Route path="my-task" element={<MyTask />} />
+            <Route path="member" element={<WorkspaceMember />} />
+            <Route path="setting" element={<WorkspaceSetting />} />
         </Route>
 
         <Route 
