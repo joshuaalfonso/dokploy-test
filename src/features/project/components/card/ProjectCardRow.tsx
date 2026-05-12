@@ -1,6 +1,7 @@
 import { LuFolder, LuListCheck } from "react-icons/lu"
 import type { Project } from "../../project.model"
 import { Avatar, Badge, Separator } from "@chakra-ui/react"
+import { getProjectPallete } from "@/shared/data/projectStatus"
 
 
 interface Props {
@@ -21,7 +22,7 @@ const ProjectCardRow = ( { item }: Props ) => {
 
             <div className="flex justify-between items-center">
                 <LuFolder size={20} />
-                <Badge>{ item.status }</Badge>
+                <Badge colorPalette={getProjectPallete(item.status)}>{ item.status }</Badge>
             </div>
 
             <div>

@@ -2,12 +2,13 @@ import {  Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
 import { useProjectDialogStore } from "./store/projectDialogStore"
 import ProjectDialog from "./components/dialog/ProjectDialog";
 import { usePaginatedProject } from "./hooks/useProject";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+// import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import ProjectCardList from "./components/card/ProjectCardList";
 import ProjectToolbar from "./components/toolbar/ProjectToolbar";
 import { useProjectParams } from "./hooks/useProjectParams";
 import Empty from "@/shared/components/EmptyState";
 import LoadingSpinner from "@/shared/components/LoadingSpinner";
+import PaginationControls from "@/shared/components/PaginationControls";
 
 
 const Project = () => {
@@ -22,7 +23,7 @@ const Project = () => {
     if (error) return <p>Failed to load project</p>;
 
     const projects =
-        data?.data ?? []
+        data?.data ?? [];
 
     return (
         <>
@@ -49,39 +50,17 @@ const Project = () => {
 
                     { projects.length > 0 && (
                         <>  
-                            <ProjectCardList items={ projects ?? [] } />
+                            <ProjectCardList 
+                                items={ projects ?? [] } 
+                            />
 
-                            <div className="flex items-center justify-end gap-4! mt-6!">
-
-                                <Text fontSize={'sm'} color={'fg.muted'}>
-                                    page { data?.page } of { data?.totalPages }
-                                </Text>
-
-                                <Button
-                                    variant={'ghost'}
-                                    size={'sm'}
-                                    onClick={() => {
-                                        setFilters(
-                                            {page: data!.page - 1}
-                                        )
-                                    }}
-                                    disabled={data?.page == 1}
-                                >
-                                    <LuChevronLeft />
-                                </Button>
-                                <Button
-                                    variant={'ghost'}
-                                    size={'sm'}
-                                    onClick={() => {
-                                        setFilters(
-                                            {page: data!.page + 1}
-                                        )
-                                    }}
-                                    disabled={data?.page == data?.totalPages}
-                                >
-                                    <LuChevronRight />
-                                </Button>
-                            </div>
+                            <PaginationControls 
+                                page={data!.page}
+                                totalPages={data!.totalPages}
+                                onPageChange={(page) => {
+                                    setFilters({ page })
+                                }}
+                            />
 
                         </>
                     ) }

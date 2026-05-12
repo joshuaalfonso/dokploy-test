@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
-import type { ProjectParams } from '../project.model'
+import type { AllowedSort, ProjectParams } from '../project.model'
 import { useCallback } from 'react'
 
 export type SortOrder = 'asc' | 'desc'
@@ -12,13 +12,14 @@ export function useProjectParams() {
   const filters: ProjectParams = {
     search: params.get('search') || undefined,
     status: params.get('status') || undefined,
-    sort: (params.get('sort') as SortOrder) || 'desc',
-    limit: params.get('limit')
-      ? Number(params.get('limit'))
-      : 10,
     page: params.get('page')
       ? Number(params.get('page'))
       : 1,
+    limit: params.get('limit')
+      ? Number(params.get('limit'))
+      : 10,
+    sort: (params.get('sort') as AllowedSort) || undefined,
+    order: (params.get('order') as SortOrder) || 'desc',
   }
 
   const setFilters = useCallback((next: Partial<ProjectParams>) => {

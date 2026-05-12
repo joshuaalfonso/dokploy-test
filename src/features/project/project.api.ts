@@ -5,13 +5,6 @@ import type { User } from "../signup/signUp.model";
 
 
 
-// export interface ProjectParams {
-//     cursor: string | null
-//     search?: string
-//     status?: ProjectStatus
-//     sort?: 'asc' | 'desc'
-// }
-
 interface ProjectResponse {
   data: Project[]
   page: number,

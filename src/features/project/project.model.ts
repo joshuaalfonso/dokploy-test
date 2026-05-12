@@ -1,3 +1,4 @@
+import type { SortOrder } from "./hooks/useProjectParams";
 
 
 
@@ -25,11 +26,14 @@ export interface Project {
 
 
 
+export type AllowedSort = | 'created_at' | 'status' | 'project_name'
+
 export type ProjectParams = {
   limit?: number
   search?: string
   status?: string
-  sort?: 'asc' | 'desc'
+  sort?: AllowedSort
+  order?: SortOrder
 //   cursor?: string | null
   page: number
 }
