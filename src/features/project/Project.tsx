@@ -1,31 +1,28 @@
-import {  Button, EmptyState, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react"
+import {  Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
 import { useProjectDialogStore } from "./store/projectDialogStore"
 import ProjectDialog from "./components/dialog/ProjectDialog";
 import { usePaginatedProject } from "./hooks/useProject";
-import { useProjectParams } from "./hooks/useProjectParams";
-import { LuFolderArchive } from "react-icons/lu";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import ProjectCardList from "./components/card/ProjectCardList";
-// import { useProjectByWorkspace } from "./hooks/useProject";
-// import ProjectCardList from "./components/card/ProjectCardList";
-// import { LuFolderArchive } from "react-icons/lu";
-
+import ProjectToolbar from "./components/toolbar/ProjectToolbar";
+import { useProjectParams } from "./hooks/useProjectParams";
+import Empty from "@/shared/components/EmptyState";
+import LoadingSpinner from "@/shared/components/LoadingSpinner";
 
 
 const Project = () => {
 
     const setOpen  = useProjectDialogStore(state => state.setCreateModalOpen);
 
-    // const { user_project, isPending, error } = useProjectByWorkspace();
 
-    const { filters, setFilters } = useProjectParams()
+    const { setFilters } = useProjectParams();
 
-    const { data, isPending, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaginatedProject(filters)
+    const { data, isPending, error } = usePaginatedProject();
 
-    if (isPending) return <p>Loading...</p>;
     if (error) return <p>Failed to load project</p>;
 
-      const projects =
-        data?.pages.flatMap((p) => p.data) ?? []
+    const projects =
+        data?.data ?? []
 
     return (
         <>
@@ -40,32 +37,57 @@ const Project = () => {
                 <Button onClick={() => setOpen(true)}>Create</Button>
             </Flex>
 
-            { projects.length === 0 ? (
-                <EmptyState.Root>
-                    <EmptyState.Content>
-                        <EmptyState.Indicator>
-                        <LuFolderArchive />
-                        </EmptyState.Indicator>
-                        <VStack textAlign="center">
-                            <EmptyState.Title>List is empty</EmptyState.Title>
-                            <EmptyState.Description>
-                                Add item to get started
-                        </EmptyState.Description>
-                        </VStack>
-                    </EmptyState.Content>
-                </EmptyState.Root>
-            ) :  (
+            <ProjectToolbar />
+
+            { isPending ? (
+                <LoadingSpinner />
+            ) : (
+
                 <>
-                    <ProjectCardList items={ projects ?? [] } />
-                     <Button
-                        onClick={() => fetchNextPage()}
-                        disabled={!hasNextPage}
-                    >
-                        {isFetchingNextPage
-                        ? 'Loading...'
-                        : 'Load more'}
-                    </Button>
+
+                    { projects?.length === 0 && (<Empty />) }
+
+                    { projects.length > 0 && (
+                        <>  
+                            <ProjectCardList items={ projects ?? [] } />
+
+                            <div className="flex items-center justify-end gap-4! mt-6!">
+
+                                <Text fontSize={'sm'} color={'fg.muted'}>
+                                    page { data?.page } of { data?.totalPages }
+                                </Text>
+
+                                <Button
+                                    variant={'ghost'}
+                                    size={'sm'}
+                                    onClick={() => {
+                                        setFilters(
+                                            {page: data!.page - 1}
+                                        )
+                                    }}
+                                    disabled={data?.page == 1}
+                                >
+                                    <LuChevronLeft />
+                                </Button>
+                                <Button
+                                    variant={'ghost'}
+                                    size={'sm'}
+                                    onClick={() => {
+                                        setFilters(
+                                            {page: data!.page + 1}
+                                        )
+                                    }}
+                                    disabled={data?.page == data?.totalPages}
+                                >
+                                    <LuChevronRight />
+                                </Button>
+                            </div>
+
+                        </>
+                    ) }
+
                 </>
+
             ) }
 
             <ProjectDialog />

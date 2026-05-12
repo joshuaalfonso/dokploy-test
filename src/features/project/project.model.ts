@@ -25,9 +25,11 @@ export interface Project {
 
 
 
-export type ProjectQuery = {
-  cursor?: string | null
+export type ProjectParams = {
+  limit?: number
   search?: string
-  status?: string 
+  status?: string
   sort?: 'asc' | 'desc'
+//   cursor?: string | null
+  page: number
 }

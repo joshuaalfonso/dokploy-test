@@ -23,9 +23,12 @@ function App() {
     <>
       <Toaster />
       
-      <Routes>
+      <Routes> 
 
-        <Route path="workspace/:workspace_id" element={<ProtectedRoute><Layout /></ProtectedRoute>}>  
+        <Route 
+          path="workspace/:workspace_id" 
+          element={<ProtectedRoute><Layout /></ProtectedRoute>}
+        >  
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="project" element={<Project />} />
             <Route path="my-task" element={<MyTask />} />

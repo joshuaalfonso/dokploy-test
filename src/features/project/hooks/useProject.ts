@@ -1,6 +1,7 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {  useQuery } from "@tanstack/react-query";
 import { getPaginatedProjectByUserApi, getProjectByWorkspaceApi } from "../project.api";
 import { useParams } from "react-router-dom";
+import { useProjectParams } from "./useProjectParams";
 // import type { ProjectStatus } from "../project.model";
 // import type { ProjectStatus } from "../project.model";
 
@@ -21,8 +22,6 @@ import { useParams } from "react-router-dom";
 // }
 
 
-
-
 export const useProjectByWorkspace = () => {
 
     const { workspace_id } = useParams();
@@ -38,26 +37,20 @@ export const useProjectByWorkspace = () => {
 }
 
 
-export function usePaginatedProject(filters: {
-    search: string
-    status: string
-    sort: 'asc' | 'desc'
-}) {
+export function usePaginatedProject() {
 
     const { workspace_id } = useParams();
 
-    return useInfiniteQuery({
-        queryKey: ['projects', filters],
+    const { filters } = useProjectParams();
 
-        initialPageParam: null as string | null,
+    const { data, isPending, error } = useQuery({
+        queryKey: ['projects', workspace_id, filters],
+        queryFn: () => 
+            getPaginatedProjectByUserApi(Number(workspace_id || 0), filters),
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10,
+    } )
 
-        queryFn: ({ pageParam }) =>
-        getPaginatedProjectByUserApi(Number(workspace_id), {
-            ...filters,
-            cursor: pageParam,
-        }),
+    return { data, isPending, error }
 
-        getNextPageParam: (lastPage) =>
-        lastPage.next_cursor ?? undefined,
-    })
 }

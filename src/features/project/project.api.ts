@@ -1,20 +1,24 @@
 import api from "@/lib/axios";
 import type { ApiResponse } from "@/shared/model/apiResponse.model";
-import type { CreateProject, Project, ProjectQuery, ProjectStatus } from "./project.model";
+import type { CreateProject, Project, ProjectParams } from "./project.model";
 import type { User } from "../signup/signUp.model";
 
 
 
-export interface ProjectParams {
-    cursor: string | null
-    search?: string
-    status?: ProjectStatus
-    sort?: 'asc' | 'desc'
-}
+// export interface ProjectParams {
+//     cursor: string | null
+//     search?: string
+//     status?: ProjectStatus
+//     sort?: 'asc' | 'desc'
+// }
 
 interface ProjectResponse {
   data: Project[]
-  next_cursor: string | null
+  page: number,
+  limit: number,
+  total: number,
+  totalPages: number
+  hasMore: boolean
 }
 
 const TABLE_NAME = 'project';
@@ -31,7 +35,8 @@ export const getProjectByUserApi = async (user_id: User['user_id']) => {
 }
 
 
-export const getPaginatedProjectByUserApi = async (workspace_id: number, params: ProjectQuery) => {
+export const getPaginatedProjectByUserApi = async (workspace_id: number, params: ProjectParams) => {
+
     const res = await api.get<ProjectResponse>(`/${TABLE_NAME}/paginated/${workspace_id}`, { params: params});
     return res.data;
 }
