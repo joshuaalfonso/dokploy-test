@@ -1,5 +1,5 @@
 import {  useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPaginatedProjectByUserApi, getProjectByWorkspaceApi } from "../project.api";
+import { getPaginatedProjectByUserApi, getProjectByWorkspaceApi, getSingleProjectApi } from "../project.api";
 import { useParams } from "react-router-dom";
 import { useProjectParams } from "./useProjectParams";
 import { useEffect } from "react";
@@ -30,12 +30,32 @@ export const useProjectByWorkspace = () => {
     const { data: user_project, isPending, error } = useQuery({
         queryKey: ['projects', workspace_id],
         queryFn: () => getProjectByWorkspaceApi(Number(workspace_id!)),
-        enabled: !!workspace_id
+        enabled: !!workspace_id,
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10,
     })
 
     return { user_project, isPending, error }
 
 }
+
+
+export const useSingleProject = () => {
+
+    const { project_id } = useParams();
+
+    const { data: project, isPending, error } = useQuery({
+        queryKey: ['projects', project_id],
+        queryFn: () => getSingleProjectApi(Number(project_id!)),
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10,
+        enabled: !!project_id
+    })
+
+    return { project, isPending, error }
+
+}
+
 
 
 export function usePaginatedProject() {

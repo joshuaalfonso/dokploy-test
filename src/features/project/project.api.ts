@@ -1,12 +1,10 @@
 import api from "@/lib/axios";
 import type { ApiResponse } from "@/shared/model/apiResponse.model";
-import type { CreateProject, Project, ProjectParams } from "./project.model";
+import type { CreateProject, ProjectList, ProjectParams } from "./project.model";
 import type { User } from "../signup/signUp.model";
 
-
-
 interface ProjectResponse {
-  data: Project[]
+  data: ProjectList[]
   page: number,
   limit: number,
   total: number,
@@ -16,14 +14,8 @@ interface ProjectResponse {
 
 const TABLE_NAME = 'project';
 
-// export const getWorkspaceApi = async () => {
-//     const res = await api.get<Workspace[]>(`/${TABLE_NAME}`);
-//     return res.data;
-// }
-
-
 export const getProjectByUserApi = async (user_id: User['user_id']) => {
-    const res = await api.get<Project[]>(`/${TABLE_NAME}/${user_id}`);
+    const res = await api.get<ProjectList[]>(`/${TABLE_NAME}/${user_id}`);
     return res.data;
 }
 
@@ -34,8 +26,14 @@ export const getPaginatedProjectByUserApi = async (workspace_id: number, params:
     return res.data;
 }
 
+export const getSingleProjectApi = async (project_id: number) => {
+
+    const res = await api.get<ProjectList>(`/${TABLE_NAME}/detail/${project_id}`);
+    return res.data;
+}
+
 export const getProjectByWorkspaceApi = async (workspace_id: CreateProject['workspace_id']) => {
-    const res = await api.get<Project[]>(`/${TABLE_NAME}/${workspace_id}`);
+    const res = await api.get<ProjectList[]>(`/${TABLE_NAME}/${workspace_id}`);
     return res.data;
 }
 

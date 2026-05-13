@@ -1,12 +1,12 @@
 // store/projectStore.ts
 import { create } from "zustand";
-import type { Project } from "../project.model";
+import type { ProjectList } from "../project.model";
 
 
 
 type ProjectStore = {
-  selectedProject: Project | null;
-  setSelectedProject: (project: Project | null) => void;
+  selectedProject: ProjectList | null;
+  setSelectedProject: (project: ProjectList | null) => void;
 
   isCreateModalOpen: boolean;
   // isDeleteModalOpen: boolean;

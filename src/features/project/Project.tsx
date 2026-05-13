@@ -2,13 +2,15 @@ import {  Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
 import { useProjectDialogStore } from "./store/projectDialogStore"
 import ProjectDialog from "./components/dialog/ProjectDialog";
 import { usePaginatedProject } from "./hooks/useProject";
-// import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import ProjectCardList from "./components/card/ProjectCardList";
 import ProjectToolbar from "./components/toolbar/ProjectToolbar";
 import { useProjectParams } from "./hooks/useProjectParams";
 import Empty from "@/shared/components/EmptyState";
-import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import PaginationControls from "@/shared/components/PaginationControls";
+import ProjectCardSkeleton from "./components/card/ProjectCardSkeleton";
+import LoadingSpinner from "@/shared/components/LoadingSpinner";
+import ProjectTable from "./components/table/ProjectTable";
+
 
 
 const Project = () => {
@@ -16,7 +18,9 @@ const Project = () => {
     const setOpen  = useProjectDialogStore(state => state.setCreateModalOpen);
 
 
-    const { setFilters } = useProjectParams();
+    const { filters, setFilters } = useProjectParams();
+
+    console.log('project')
 
     const { data, isPending, error } = usePaginatedProject();
 
@@ -41,7 +45,13 @@ const Project = () => {
             <ProjectToolbar />
 
             { isPending ? (
-                <LoadingSpinner />
+                <>  
+                    {
+                        filters.view === 'table'
+                        ? <LoadingSpinner />
+                        : <ProjectCardSkeleton />
+                    }
+                </>
             ) : (
 
                 <>
@@ -50,13 +60,17 @@ const Project = () => {
 
                     { projects.length > 0 && (
                         <>  
-                            <ProjectCardList 
-                                items={ projects ?? [] } 
-                            />
+                            
+                            {filters.view === 'table' ? (
+                                <ProjectTable items={projects} />
+                            ) : (
+                                <ProjectCardList items={projects} />
+                            )}
 
                             <PaginationControls 
                                 page={data!.page}
                                 totalPages={data!.totalPages}
+                                total={data!.total}
                                 onPageChange={(page) => {
                                     setFilters({ page })
                                 }}
@@ -68,6 +82,7 @@ const Project = () => {
                 </>
 
             ) }
+
 
             <ProjectDialog />
         

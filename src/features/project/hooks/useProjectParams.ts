@@ -3,7 +3,7 @@ import type { AllowedSort, ProjectParams } from '../project.model'
 import { useCallback } from 'react'
 
 export type SortOrder = 'asc' | 'desc'
-
+export type ViewMode = 'grid' | 'table'
 
 export function useProjectParams() {
 
@@ -20,6 +20,7 @@ export function useProjectParams() {
       : 10,
     sort: (params.get('sort') as AllowedSort) || undefined,
     order: (params.get('order') as SortOrder) || 'desc',
+    view: (params.get('view') as ViewMode) || 'card',
   }
 
   const setFilters = useCallback((next: Partial<ProjectParams>) => {

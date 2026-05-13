@@ -14,13 +14,9 @@ const WorkspaceSetting = () => {
 
     const { workspaceMembers } = useWorkspaceMember();
 
-    console.log(workspace_id)
-
     const selectedWorkspace = user_workspaces?.find(item => item.workspace_id == (workspace_id || 0));
 
     if (!selectedWorkspace) return <p>Workspace not found</p>
-
-    console.log(selectedWorkspace)
 
     return (
         <div className="space-y-10!">

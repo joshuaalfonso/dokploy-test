@@ -1,4 +1,4 @@
-import type { SortOrder } from "./hooks/useProjectParams";
+import type { SortOrder, ViewMode } from "./hooks/useProjectParams";
 
 
 
@@ -13,7 +13,7 @@ export interface CreateProject {
 }
 
 
-export interface Project {
+export interface ProjectList {
     project_id: number
     workspace_id: number
     workspace_name: string
@@ -36,4 +36,5 @@ export type ProjectParams = {
   order?: SortOrder
 //   cursor?: string | null
   page: number
+  view?: ViewMode
 }

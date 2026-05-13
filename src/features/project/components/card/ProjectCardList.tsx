@@ -1,4 +1,4 @@
-import type { Project } from "../../project.model"
+import type {  ProjectList } from "../../project.model"
 import ProjectCardRow from "./ProjectCardRow"
 
 
@@ -6,7 +6,7 @@ import ProjectCardRow from "./ProjectCardRow"
 
 
 interface Props {
-    items: Project[]
+    items: ProjectList[]
 }
 
 
