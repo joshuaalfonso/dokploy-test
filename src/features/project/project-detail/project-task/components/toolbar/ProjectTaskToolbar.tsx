@@ -1,5 +1,6 @@
 import { Button, Flex, Input } from "@chakra-ui/react"
 import { LuFilter } from "react-icons/lu"
+import { useProjectTaskDialogStore } from "../../store/projectTaskStore"
 
 
 
@@ -9,6 +10,9 @@ import { LuFilter } from "react-icons/lu"
 
 
 const ProjectTaskToolbar = () => {
+
+    const setOpen = useProjectTaskDialogStore(state => state.setCreateModalOpen);
+
     return (
         
         <Flex mb={6} justifyContent={'space-between'}>
@@ -30,6 +34,7 @@ const ProjectTaskToolbar = () => {
 
             <Button
                 size={'sm'}
+                onClick={() => setOpen(true)}
             >
                 Create Task
             </Button>

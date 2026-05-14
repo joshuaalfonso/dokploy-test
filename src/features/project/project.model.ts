@@ -21,6 +21,10 @@ export interface ProjectList {
     project_description: string
     status: ProjectStatus
     created_by: number
+    full_name: string
+    email: string
+    total_task: number
+    completed_task: number
     created_at: string
 }
 

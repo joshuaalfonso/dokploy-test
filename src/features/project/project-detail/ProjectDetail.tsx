@@ -1,11 +1,13 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 import { useSingleProject } from "../hooks/useProject"
-import { Avatar, AvatarGroup, Badge, Button, Flex, Heading, Icon, Link, Stack, Tabs, Tooltip as ChakraTooltip, Portal, Text, Separator } from "@chakra-ui/react";
-import { LuListCheck, LuMoveLeft, LuSettings } from "react-icons/lu";
+// import { Avatar, AvatarGroup, Badge, Flex, Heading, Icon, Link, Stack, Tabs, Tooltip as ChakraTooltip, Portal, Text, Separator } from "@chakra-ui/react";
+import { Avatar, AvatarGroup, Badge, Flex, Heading, Icon, Link, Stack, Tabs, Text, Separator } from "@chakra-ui/react";
+import { LuListCheck, LuMoveLeft, LuPlus, LuSettings } from "react-icons/lu";
 import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import { getProjectPallete } from "@/shared/data/projectStatus";
 import { Tooltip } from "@/components/ui/tooltip";
 import { formatReadableDate } from "@/lib/formatDate";
+import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember";
 
 
 const ProjectDetail = () => {
@@ -18,15 +20,17 @@ const ProjectDetail = () => {
     const section = location.pathname.split("/")[5]; 
 
     const handleBack = () => {
-        console.log(location.state)
         navigate(location.state?.from || "/project");
     };
 
     const { project, isPending, error } = useSingleProject();
 
+    const { workspaceMembers, isPending: isWorkspaceMemberLoading, error: workspaceMemberError } = useWorkspaceMember();
+
+    console.log(isWorkspaceMemberLoading, workspaceMemberError)
+
     const { project_id, workspace_id } = useParams();
 
-    console.log(project_id)
 
     if (isPending) return <LoadingSpinner />;
     if (error) return <p>Failed to load details</p>;
@@ -35,7 +39,17 @@ const ProjectDetail = () => {
     return (
         <>
         
-            <Flex alignItems={'center'} justifyContent={'space-between'} gap={4} mb={8}>
+            <Flex 
+                flexDirection={'column'} 
+                alignItems={'start'}
+                md={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                }} 
+                justifyContent={'space-between'} 
+                gap={4} 
+                mb={8}
+            >
 
                 <Flex direction={'column'} gap={4}>
                     
@@ -64,7 +78,7 @@ const ProjectDetail = () => {
 
                         <Flex gap={2}>
                             <Text fontSize={'xs'} color={'fg.muted'}>Total Task: </Text>
-                            <Text fontSize={'xs'}> 12 / 29 </Text>
+                            <Text fontSize={'xs'}> {project?.completed_task} / {project?.total_task} </Text>
                         </Flex>
 
                     </Flex>
@@ -78,11 +92,35 @@ const ProjectDetail = () => {
                     alignItems={'center'} 
                     gap={4} 
                 >
+                    Team
 
                     <AvatarGroup gap="0" spaceX="-3" size="sm">
 
+                        {workspaceMembers?.map(item => (
+                            <Tooltip 
+                                positioning={{ placement: "top" }} 
+                                openDelay={10} 
+                                content={item.full_name}
+                                key={item.user_id}
+                            >
+                                <Avatar.Root>
+                                    <Avatar.Fallback name={item.full_name} />
+                                </Avatar.Root>
+                            </Tooltip>
+                        ))}
 
                         <Tooltip 
+                            positioning={{ placement: "top" }} 
+                            openDelay={10} 
+                            content="Add Members">
+                            <Avatar.Root variant={'solid'} cursor={'pointer'}>
+                                <Avatar.Fallback><LuPlus /></Avatar.Fallback>
+                            </Avatar.Root>
+                        </Tooltip>
+
+                        
+
+                        {/* <Tooltip 
                             positioning={{ placement: "top" }} 
                             openDelay={10} 
                             content="Uchiha Sasuke">
@@ -137,16 +175,10 @@ const ProjectDetail = () => {
                                 </ChakraTooltip.Content>
                             </ChakraTooltip.Positioner>
                             </Portal>
-                        </ChakraTooltip.Root>
+                        </ChakraTooltip.Root> */}
                         
 
                     </AvatarGroup>
-
-                    <Button 
-                        size={'xs'}
-                    >
-                        Add Member
-                    </Button>
 
                 </Stack>
 
@@ -174,7 +206,7 @@ const ProjectDetail = () => {
                         // }}
                     >
                     <Link unstyled>
-                        <LuListCheck />
+                        <LuListCheck size={16} />
                         Task
                     </Link>
                     </Tabs.Trigger>
@@ -187,7 +219,7 @@ const ProjectDetail = () => {
                         // }}
                     >
                     <Link unstyled>
-                        <LuSettings />
+                        <LuSettings size={16} />
                         Setting
                     </Link>
                     </Tabs.Trigger>

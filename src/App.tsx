@@ -18,8 +18,18 @@ import Project from './features/project/Project'
 import ProjectDetail from './features/project/project-detail/ProjectDetail'
 import ProjectTask from './features/project/project-detail/project-task/ProjectTask'
 import ProjectSetting from './features/project/project-detail/project-setting/ProjectSetting'
+import { useAuthStore } from './auth-layout/store/useAuthStore'
+import { useEffect } from 'react'
 
 function App() {
+
+  const checkToken = useAuthStore((state) => state.checkToken);
+
+  console.log('app')
+
+  useEffect(() => {
+    checkToken();
+  }, [checkToken]);
 
   return (
     <>

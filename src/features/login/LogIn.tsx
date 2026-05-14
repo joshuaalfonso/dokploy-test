@@ -19,7 +19,7 @@ const LogIn = () => {
 
     const { logInMutation, isLoggingIn } = useLogIn();
 
-    const { setUser, setToken } = useAuthStore();
+    const { setAuth } = useAuthStore();
 
     // const navigate = useNavigate();
 
@@ -37,8 +37,9 @@ const LogIn = () => {
             {
                 onSuccess: (response) => {
                     reset();
-                    setUser(response.user)
-                    setToken(response.token)
+                    // setUser(response.user)
+                    // setToken(response.token)
+                    setAuth(response.user, response.token)
                     console.log(response)
                 },
                 onError: (err) => {

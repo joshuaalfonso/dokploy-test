@@ -19,3 +19,13 @@ export interface Task {
     email: string;
     created_at: string
 }
+
+
+export interface CreateTask {
+    project_id: number;
+    task_title: string;
+    task_description: string;
+    status: TaskStatus;
+    priority: TaskPriority;
+    due_date: string;
+}
