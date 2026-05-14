@@ -1,13 +1,17 @@
-
-
-
-
+import ProjectTaskTable from "./components/table/ProjectTaskTable"
+import ProjectTaskToolbar from "./components/toolbar/ProjectTaskToolbar"
 
 
 
 const ProjectTask = () => {
     return (
-        <div>ProjectTask</div>
+        <>
+
+            <ProjectTaskToolbar />
+        
+            <ProjectTaskTable />
+        
+        </>
     )
 }
 

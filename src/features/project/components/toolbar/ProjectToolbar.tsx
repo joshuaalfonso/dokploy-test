@@ -113,7 +113,7 @@ const ProjectToolbar = () => {
                 onValueChange={(e) => setFilters({view: e.value as ViewMode})}
             >
 
-                <Tabs.List bg="bg" rounded="l3">
+                <Tabs.List bg="bg" rounded="l3" >
 
                     <Tabs.Trigger 
                         value="card"

@@ -10,8 +10,8 @@ interface Props {
 
 const ProjectTable = ( { items }: Props ) => {
     return (
-        <Table.ScrollArea bg={'red.100'} borderWidth="1px">
-            <Table.Root size="sm" showColumnBorder>
+        <Table.ScrollArea borderWidth="1px">
+            <Table.Root size="md" showColumnBorder>
                 <Table.Header>
                     <Table.Row >
                         <Table.ColumnHeader color={'fg.muted'}>Project</Table.ColumnHeader>
@@ -22,7 +22,7 @@ const ProjectTable = ( { items }: Props ) => {
                 </Table.Header>
                 <Table.Body>
                     {items.map((item) => (
-                        <ProjectTableRow item={item} />
+                        <ProjectTableRow item={item} key={item.project_id} />
                     ))}
                 </Table.Body>
             </Table.Root>

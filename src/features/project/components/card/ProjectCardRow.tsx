@@ -2,7 +2,7 @@ import { LuFolder, LuListCheck } from "react-icons/lu"
 import type { ProjectList } from "../../project.model"
 import { Avatar, Badge, Separator } from "@chakra-ui/react"
 import { getProjectPallete } from "@/shared/data/projectStatus"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 
 interface Props {
@@ -14,6 +14,8 @@ const ProjectCardRow = ( { item }: Props ) => {
 
     const navigate = useNavigate();
 
+    const location = useLocation();
+
     return (
         <li 
             className="
@@ -22,7 +24,13 @@ const ProjectCardRow = ( { item }: Props ) => {
                 transition-all duration-200 ease-out
                 cursor-pointer
             " 
-            onClick={() => navigate(`${item.project_id}/task`)}
+            onClick={() =>
+                navigate(`${item.project_id}/task`, {
+                    state: {
+                        from: location,
+                    },
+                })
+            }
         >
 
             <div className="flex justify-between items-center">

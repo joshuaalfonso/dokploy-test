@@ -1,4 +1,4 @@
-import { Button, Stack, Text } from "@chakra-ui/react"
+import { Button, Flex, FormatNumber, Stack } from "@chakra-ui/react"
 import { LuChevronLeft, LuChevronRight, LuChevronsLeft, LuChevronsRight } from "react-icons/lu"
 
 
@@ -27,10 +27,15 @@ const PaginationControls = ({
     return (
         <div className="flex flex-col md:flex-row items-center justify-end gap-4! md:gap-8! mt-6!">
 
-            <Text fontSize="sm" color="fg.muted">
+            <Flex gap={1} fontSize="sm" color="fg.muted">
                 {/* page {page} of {totalPages} */}
-                {`${start} - ${end}`} of {total}
-            </Text>
+                {/* {`${start} - ${end}`} of {total} */}
+                <FormatNumber value={start} /> 
+                <span>-</span>
+                <FormatNumber value={end} /> 
+                <span>of</span>
+                <FormatNumber value={total} /> 
+            </Flex>
 
             <Stack direction={'row'}>
                 <Button
