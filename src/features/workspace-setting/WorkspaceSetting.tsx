@@ -107,9 +107,9 @@ const WorkspaceSetting = () => {
                     </Text>
                 </Stack>
 
-                <ul>
+                <ul className="divide-y! divide-dashed ">
                     { workspaceMembers?.map(item => (
-                        <li key={item.user_id} className="flex items-center! justify-between gap-4!">
+                        <li key={item.user_id} className="flex items-center! justify-between gap-4! py-3!">
 
                             <div className="flex items-center gap-3!">
                                 <Avatar.Root size={'sm'} variant={'solid'}>

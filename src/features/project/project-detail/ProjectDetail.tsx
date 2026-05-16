@@ -1,8 +1,8 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
-import { useSingleProject } from "../hooks/useProject"
+import { useProjectMember, useSingleProject } from "../hooks/useProject"
 // import { Avatar, AvatarGroup, Badge, Flex, Heading, Icon, Link, Stack, Tabs, Tooltip as ChakraTooltip, Portal, Text, Separator } from "@chakra-ui/react";
-import { Avatar, AvatarGroup, Badge, Flex, Heading, Icon, Link, Stack, Tabs, Text, Separator } from "@chakra-ui/react";
-import { LuListCheck, LuMoveLeft, LuPlus, LuSettings } from "react-icons/lu";
+import { Avatar, AvatarGroup, Badge, Flex, Heading, Icon, Link, Stack, Tabs, Text, Separator, Button } from "@chakra-ui/react";
+import { LuListCheck, LuMoveLeft, LuSettings } from "react-icons/lu";
 import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import { getProjectPallete } from "@/shared/data/projectStatus";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -25,7 +25,9 @@ const ProjectDetail = () => {
 
     const { project, isPending, error } = useSingleProject();
 
-    // const { workspaceMembers, isPending: isWorkspaceMemberLoading, error: workspaceMemberError } = useWorkspaceMember();
+    const { projectMembers} = useProjectMember();
+
+    console.log(projectMembers)
 
 
     const { project_id, workspace_id } = useParams();
@@ -60,7 +62,7 @@ const ProjectDetail = () => {
                         <Icon size="lg" cursor={'pointer'} onClick={handleBack}>
                             <LuMoveLeft />
                         </Icon>
-                        <Heading>
+                        <Heading fontSize={'2xl'}>
                             { project?.project_name }
                         </Heading>
                         <Badge colorPalette={getProjectPallete(project!.status)}>{ project!.status }</Badge>
@@ -69,15 +71,15 @@ const ProjectDetail = () => {
                     <Flex gap={4}>
 
                         <Flex gap={2}>
-                            <Text fontSize={'xs'} color={'fg.muted'}>Created At: </Text>
-                            <Text fontSize={'xs'}> { formatReadableDate( new Date(project!.created_at) ) } </Text>
+                            <Text fontSize={'sm'} color={'fg.muted'}>Created At: </Text>
+                            <Text fontSize={'sm'}> { formatReadableDate( new Date(project!.created_at) ) } </Text>
                         </Flex>
 
                         <Separator orientation={'vertical'} />
 
                         <Flex gap={2}>
-                            <Text fontSize={'xs'} color={'fg.muted'}>Total Task: </Text>
-                            <Text fontSize={'xs'}> {project?.completed_task} / {project?.total_task} </Text>
+                            <Text fontSize={'sm'} color={'fg.muted'}>Total Task: </Text>
+                            <Text fontSize={'sm'}> {project?.completed_task} / {project?.total_task} </Text>
                         </Flex>
 
                     </Flex>
@@ -91,33 +93,31 @@ const ProjectDetail = () => {
                     alignItems={'center'} 
                     gap={4} 
                 >
-                    Team
 
                     <AvatarGroup gap="0" spaceX="-3" size="sm">
 
-                        {/* {workspaceMembers?.map(item => (
+                        {projectMembers?.map(item => (
                             <Tooltip 
                                 positioning={{ placement: "top" }} 
                                 openDelay={10} 
-                                content={item.full_name}
+                                content={`${item.full_name} - ${item.role}`}
                                 key={item.user_id}
                             >
                                 <Avatar.Root>
                                     <Avatar.Fallback name={item.full_name} />
                                 </Avatar.Root>
                             </Tooltip>
-                        ))} */}
+                        ))}
 
-                        <Tooltip 
+                        {/* <Tooltip 
                             positioning={{ placement: "top" }} 
                             openDelay={10} 
                             content="Add Members">
                             <Avatar.Root variant={'solid'} cursor={'pointer'}>
                                 <Avatar.Fallback><LuPlus /></Avatar.Fallback>
                             </Avatar.Root>
-                        </Tooltip>
+                        </Tooltip> */}
 
-                        
 
                         {/* <Tooltip 
                             positioning={{ placement: "top" }} 
@@ -178,6 +178,10 @@ const ProjectDetail = () => {
                         
 
                     </AvatarGroup>
+
+                    <Button variant={'surface'} size={'sm'}>
+                        Add Member
+                    </Button>
 
                 </Stack>
 

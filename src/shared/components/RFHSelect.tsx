@@ -4,13 +4,16 @@ import {
   Select,
   Portal,
   Field,
-  createListCollection
+  createListCollection,
+  Stack,
+  Span
 } from "@chakra-ui/react"
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form"
+import { Controller, type Control, type FieldValues, type Path, type RegisterOptions } from "react-hook-form"
 
 type Option = {
   label: string
   value: string
+  description?: string
 }
 
 type RHFSelectProps<T extends FieldValues> = {
@@ -19,6 +22,8 @@ type RHFSelectProps<T extends FieldValues> = {
   options: Option[]
   placeholder?: string
   error?: string
+  rules?: RegisterOptions<T, Path<T>>
+  required?: boolean
 }
 
 export function RHFSelect<T extends FieldValues>({
@@ -27,6 +32,8 @@ export function RHFSelect<T extends FieldValues>({
   options,
   placeholder = "Select",
   error,
+  rules,
+  required
 }: RHFSelectProps<T>) {
 
     const collection = createListCollection({
@@ -34,10 +41,11 @@ export function RHFSelect<T extends FieldValues>({
     })
 
   return (
-    <Field.Root invalid={!!error}>
+    <Field.Root invalid={!!error} required={required}>
       <Controller
         name={name}
         control={control}
+        rules={rules}
         render={({ field }) => (
           <Select.Root
             collection={collection}
@@ -63,7 +71,12 @@ export function RHFSelect<T extends FieldValues>({
                 <Select.Content>
                   {options.map((option) => (
                     <Select.Item item={option} key={option.value}>
-                      {option.label}
+                       <Stack gap="0">
+                        <Select.ItemText>{option.label}</Select.ItemText>
+                        <Span color="fg.muted" textStyle="xs">
+                          {option?.description}
+                        </Span>
+                      </Stack>
                       <Select.ItemIndicator />
                     </Select.Item>
                   ))}

@@ -1,9 +1,15 @@
 import { LuFolder, LuLayoutDashboard, LuListCheck, LuSettings } from "react-icons/lu"
 import { SidebarNavItem } from "./SidebarNavLink"
 import { TbTargetArrow } from "react-icons/tb";
+import { useAuthStore } from "@/auth-layout/store/useAuthStore";
+import { Avatar, Flex, Span, Text } from "@chakra-ui/react";
 
 
 const Sidebar = () => {
+
+    const user = useAuthStore(state => state.user);
+
+
     return (
         <aside 
             className="w-0 overflow-hidden xl:w-69 border-0! xl:border-r! border-(--chakra-colors-border)! flex flex-col gap-4 px-0! xl:px-2.5!"
@@ -47,6 +53,19 @@ const Sidebar = () => {
                 />
 
             </ul>
+
+            <Flex gap={3} px={3} py={4} alignItems={'center'}>
+                <Avatar.Root size={'sm'}>
+                    <Avatar.Fallback name={user?.full_name} />
+                </Avatar.Root>
+                <Flex direction={'column'}>
+                    <Text fontSize={'sm'}>
+                        {user?.full_name}
+                    </Text>
+                    <Span fontSize={'xs'} color={'fg.muted'}>{user?.email}</Span>
+
+                </Flex>
+            </Flex>
 
 
         </aside>

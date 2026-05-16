@@ -7,9 +7,20 @@ import type { SortOrder, ViewMode } from "./hooks/useProjectParams";
 export type ProjectStatus =  | 'planning' | 'active' | 'inactive' | 'completed';
 export type ProjectMemberRole =  | 'admin' | 'member' | 'viewer';
 
-export interface ProjectMember {
+export interface CreateProjectMember {
   user_id: User['user_id'],
   role: ProjectMemberRole | ''
+}
+
+export interface ProjectMember{
+  project_member_id: number
+  project_id: ProjectList['project_id']
+  project_name: ProjectList['project_name']
+  user_id: User['user_id']
+  full_name: User['full_name']
+  email: User['email']
+  role: ProjectMemberRole
+  joined_at: string
 }
 
 export interface CreateProject {
@@ -32,6 +43,8 @@ export interface ProjectList {
     email: string
     total_task: number
     completed_task: number
+    completion_percentage: number
+    project_member: string
     created_at: string
 }
 

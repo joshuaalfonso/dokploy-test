@@ -1,5 +1,5 @@
 import {  useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPaginatedProjectByUserApi, getProjectByWorkspaceApi, getSingleProjectApi } from "../project.api";
+import { getPaginatedProjectByUserApi, getProjectByWorkspaceApi, getProjectMemberApi, getSingleProjectApi } from "../project.api";
 import { useParams } from "react-router-dom";
 import { useProjectParams } from "./useProjectParams";
 import { useEffect } from "react";
@@ -53,6 +53,22 @@ export const useSingleProject = () => {
     })
 
     return { project, isPending, error }
+
+}
+
+export const useProjectMember = () => {
+
+    const { project_id } = useParams();
+
+    const { data: projectMembers, isPending, error } = useQuery({
+        queryKey: ['project_members', project_id],
+        queryFn: () => getProjectMemberApi(Number(project_id!)),
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10,
+        enabled: !!project_id
+    })
+
+    return { projectMembers, isPending, error }
 
 }
 

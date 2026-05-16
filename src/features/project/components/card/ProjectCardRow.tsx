@@ -1,8 +1,9 @@
-import { LuFolder, LuListCheck } from "react-icons/lu"
+import { LuFolder } from "react-icons/lu"
 import type { ProjectList } from "../../project.model"
-import { Avatar, Badge, Separator } from "@chakra-ui/react"
+import { Avatar, AvatarGroup, Badge, Separator } from "@chakra-ui/react"
 import { getProjectPallete } from "@/shared/data/projectStatus"
 import { useLocation, useNavigate } from "react-router-dom"
+import { Tooltip } from "@/components/ui/tooltip"
 
 
 interface Props {
@@ -15,6 +16,8 @@ const ProjectCardRow = ( { item }: Props ) => {
     const navigate = useNavigate();
 
     const location = useLocation();
+
+    const membersArray = item.project_member?.split(", ").map(name => name.trim());
 
     return (
         <li 
@@ -58,16 +61,25 @@ const ProjectCardRow = ( { item }: Props ) => {
 
             <div className="flex items-center gap-4">
 
-                <span className="text-sm! text-(--chakra-colors-fg-muted)!">72%</span>
+                <span className="text-sm! text-(--chakra-colors-fg-muted)!">{item.completion_percentage}%</span>
 
                 <div className="flex items-center gap-2 text-sm! text-(--chakra-colors-fg-muted)! flex-1!">
-                    <LuListCheck />
-                    <span>4 / 20 Tasks</span>
+                   
+                    <span> {item.completed_task} / {item.total_task} Task </span>
+                     {/* <LuListCheck size={17} /> */}
                 </div>
 
-                <Avatar.Root size={'xs'}>
-                    <Avatar.Fallback name="Segun Adebayo" />
-                </Avatar.Root>
+                 <AvatarGroup gap="0" spaceX="-3" size="xs">
+                    {membersArray?.map(item => (
+                        <Tooltip content={item} openDelay={10} positioning={{ placement: "top" }}>
+                            <Avatar.Root>
+                                <Avatar.Fallback name={item} />
+                            </Avatar.Root>
+                        </Tooltip>
+                    ))}
+
+                 </AvatarGroup>
+
 
             </div>
 

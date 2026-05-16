@@ -1,9 +1,9 @@
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
-import type { CreateProject, ProjectMember, ProjectStatus } from "../../project.model";
+import type { CreateProject, CreateProjectMember, ProjectStatus } from "../../project.model";
 import { useCreateProject } from "../../hooks/useCreateProject";
 import { toaster } from "@/components/ui/toaster";
 import { getApiErrorMessage } from "@/lib/errorMessage";
-import { Badge, Button, Dialog, Field, Fieldset, Flex, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
+import { Button, Dialog, Field, Fieldset, Flex, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
 import { useProjectDialogStore } from "../../store/projectDialogStore";
 import { useParams } from "react-router-dom";
 import { projectStatus } from "@/shared/data/projectStatus";
@@ -18,7 +18,7 @@ type ProjectFormValues = {
     project_name: CreateProject['project_name'],
     project_description: CreateProject['project_description'],
     status: ProjectStatus,
-    project_member: ProjectMember[] 
+    project_member: CreateProjectMember[] 
 }
 
 
@@ -28,6 +28,7 @@ const ProjectDialog = () => {
     const setOpen = useProjectDialogStore(state => state.setCreateModalOpen);
 
     const { workspace_id } = useParams();
+
 
     const {
         register,
@@ -40,7 +41,10 @@ const ProjectDialog = () => {
             project_name: '',
             project_description: '',
             status: 'active',
-            project_member: []
+            project_member: [{
+                user_id: 0,
+                role: ''
+            }]
         }
     });
 
@@ -53,10 +57,15 @@ const ProjectDialog = () => {
 
     const { workspaceMembers } = useWorkspaceMember();
 
-    const members = workspaceMembers?.map(item => ({
+    const members = workspaceMembers
+    ?.filter(
+        item => !fields.some(field => field.user_id === +item.user_id)
+    )
+    ?.map(item => ({
         label: item.full_name,
-        value: item.user_id
-    }))
+        value: item.user_id,
+        description: item.email
+    }));
 
 
     const onSubmit: SubmitHandler<ProjectFormValues> = (data) => {
@@ -198,18 +207,12 @@ const ProjectDialog = () => {
                                         </Field.Root>
 
                                         <Field.Root 
-                                            // required
+                                            required
                                             // invalid={Boolean(errors.project_description)}
                                         >
                                             <Field.Label>
                                                 Member
-                                                <Field.RequiredIndicator
-                                                    fallback={
-                                                        <Badge size="xs" variant="surface">
-                                                            Optional
-                                                        </Badge>
-                                                    }
-                                                />
+                                                <Field.RequiredIndicator/>
                                             </Field.Label>
                                             
                                             {fields.map((field, index) => (
@@ -217,6 +220,10 @@ const ProjectDialog = () => {
                                                     <RHFSelect<ProjectFormValues>
                                                         name={`project_member.${index}.user_id`}
                                                         control={control}
+                                                        rules={{
+                                                            required: "User is required",
+                                                        }}
+                                                        required
                                                         options={members ?? []}
                                                         placeholder="Select user"
                                                         error={errors.project_member?.[index]?.user_id?.message}
@@ -225,8 +232,12 @@ const ProjectDialog = () => {
                                                     <RHFSelect<ProjectFormValues>
                                                         name={`project_member.${index}.role`}
                                                         control={control}
+                                                        rules={{
+                                                            required: "Role is required",
+                                                        }}
+                                                        required
                                                         options={projectRole ?? []}
-                                                        placeholder="Select user"
+                                                        placeholder="Select role"
                                                         error={errors.project_member?.[index]?.role?.message}
                                                     />
 

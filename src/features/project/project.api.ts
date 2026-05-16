@@ -1,6 +1,6 @@
 import api from "@/lib/axios";
 import type { ApiResponse } from "@/shared/model/apiResponse.model";
-import type { CreateProject, ProjectList, ProjectParams } from "./project.model";
+import type { CreateProject, ProjectList, ProjectMember, ProjectParams } from "./project.model";
 import type { User } from "../signup/signUp.model";
 
 interface ProjectResponse {
@@ -29,6 +29,12 @@ export const getPaginatedProjectByUserApi = async (workspace_id: number, params:
 export const getSingleProjectApi = async (project_id: number) => {
 
     const res = await api.get<ProjectList>(`/${TABLE_NAME}/detail/${project_id}`);
+    return res.data;
+}
+
+export const getProjectMemberApi = async (project_id: number) => {
+
+    const res = await api.get<ProjectMember[]>(`/${TABLE_NAME}/member/${project_id}`);
     return res.data;
 }
 

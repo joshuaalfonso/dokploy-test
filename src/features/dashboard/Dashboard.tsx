@@ -1,8 +1,5 @@
 import { Heading, Stack, Text } from "@chakra-ui/react"
 import 'react-modern-gantt/dist/index.css';
-// import { GanttChart } from 'react-modern-gantt';
-
-
 
 
 const Dashboard = () => {
