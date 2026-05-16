@@ -43,7 +43,7 @@ const ProjectCardRow = ( { item }: Props ) => {
 
             <div>
                 <h1 className="font-sm! font-semibold! mb-1!">{ item.project_name }</h1>
-                <p className="text-sm! text-(--chakra-colors-fg-muted)!">
+                <p className="text-sm! text-(--chakra-colors-fg-muted)! line-clamp-1">
                     { item.project_description }
                 </p>
             </div>

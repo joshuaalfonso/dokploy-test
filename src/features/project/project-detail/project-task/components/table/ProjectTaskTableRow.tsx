@@ -1,7 +1,9 @@
-import { Avatar, AvatarGroup, Badge, Flex, Table } from "@chakra-ui/react"
+import { Avatar, AvatarGroup, Badge, Flex, Table, Text } from "@chakra-ui/react"
 import type { Task } from "../../projectTask.model"
-import { LuFlag } from "react-icons/lu"
+import { LuCircleDashed, LuFlag } from "react-icons/lu"
 import { formatReadableDate } from "@/lib/formatDate"
+import { getTaskStatusPalette } from "@/shared/data/taskStatus"
+import { getTaskPriorityPalette } from "@/shared/data/taskPriority"
 
 
 interface Props {
@@ -11,17 +13,21 @@ interface Props {
 const ProjectTaskTableRow = ( { item }: Props ) => {
     return (
        <Table.Row key={item.task_id}>
-            <Table.Cell>{item.task_title}</Table.Cell>
+            <Table.Cell>
+                <Text fontWeight={'semibold'}>
+                    {item.task_title}
+                </Text>
+            </Table.Cell>
             <Table.Cell>{item.task_description}</Table.Cell>
             <Table.Cell>
 
                 <Flex gap={3}>
-                    <Badge variant={'subtle'} colorPalette={'red'}>
-                        {/* <LuFlag size={14} /> */}
+                    <Badge variant={'subtle'} colorPalette={getTaskPriorityPalette(item.priority)}>
+                        <LuFlag size={14} />
                         {item.priority}
                     </Badge>
-                    <Badge variant={'subtle'} colorPalette={'yellow'}>
-                        {/* <LuFlag size={14} /> */}
+                    <Badge variant={'subtle'} colorPalette={getTaskStatusPalette(item.status)}>
+                        <LuCircleDashed size={14} />
                         {item.status}
                     </Badge>
                 </Flex>
@@ -30,7 +36,6 @@ const ProjectTaskTableRow = ( { item }: Props ) => {
             </Table.Cell>
             <Table.Cell>
                 <Flex alignItems={'center'} gap="2">
-                    <LuFlag />
                     <span>{ formatReadableDate(new Date(item.due_date)) }</span>
                 </Flex>
             </Table.Cell>

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useProjectTaskDialogStore } from "../../store/projectTaskStore";
 import type { Task } from "../../projectTask.model";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import {  useForm, type SubmitHandler } from "react-hook-form";
 import { Button, Dialog, Field, Fieldset, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
 import { RHFSelect } from "@/shared/components/RFHSelect";
 import { taskStatus } from "@/shared/data/taskStatus";
@@ -10,6 +10,8 @@ import { RHFDatePicker } from "@/shared/components/RFHDatePicker";
 import { useCreateTask } from "../../hooks/useCreateTask";
 import { toaster } from "@/components/ui/toaster";
 import { getApiErrorMessage } from "@/lib/errorMessage";
+import { useProjectMember } from "@/features/project/hooks/useProject";
+import { RHFMultiSelect } from "@/shared/components/RFHMultiSelect";
 
 
 type TaskFormValues = {
@@ -19,6 +21,7 @@ type TaskFormValues = {
     status: Task['status'],
     priority: Task['priority'],
     due_date: Task['due_date'],
+    task_assignee: number[]
 }
 
 
@@ -42,12 +45,24 @@ const ProjectTaskDialog = () => {
             status: 'todo',
             priority: 'low',
             due_date: '',
+            task_assignee: []
         }
     });
+
+    // const { fields, append, remove } = useFieldArray({
+    //     control,
+    //     name: 'task_assignee'
+    // });
     
     const { createTaskMutation, isCreating } = useCreateTask();
 
+    const { projectMembers } = useProjectMember();
 
+    const members = projectMembers?.map(item => ({
+        label: `${item.full_name} | ${item.role}`,
+        value: String(item.user_id),
+        description: item.email
+    }))
     
     const onSubmit: SubmitHandler<TaskFormValues> = (data) => {
 
@@ -171,7 +186,9 @@ const ProjectTaskDialog = () => {
                                             )}
                                         </Field.Root>
                                         
-                                        <Field.Root 
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4!">
+
+                                            <Field.Root 
                                             required
                                             invalid={Boolean(errors.status)}
                                         >
@@ -182,6 +199,10 @@ const ProjectTaskDialog = () => {
                                             <RHFSelect<TaskFormValues>
                                                 name="status"
                                                 control={control}
+                                                rules={{
+                                                    required: "Status is required",
+                                                }}
+                                                required
                                                 options={taskStatus}
                                                 placeholder="Select"
                                                 error={errors.status?.message}
@@ -199,11 +220,17 @@ const ProjectTaskDialog = () => {
                                             <RHFSelect<TaskFormValues>
                                                 name="priority"
                                                 control={control}
+                                                rules={{
+                                                    required: "Priority is required",
+                                                }}
+                                                required
                                                 options={taskPriority}
                                                 placeholder="Select"
                                                 error={errors.priority?.message}
                                             />
                                         </Field.Root>
+
+                                        </div>
 
                                         <Field.Root 
                                             required
@@ -218,6 +245,28 @@ const ProjectTaskDialog = () => {
                                                 control={control}
                                                 placeholder="Select"
                                                 error={errors.due_date?.message}
+                                            />
+                                        </Field.Root>
+
+                                        <Field.Root 
+                                            required
+                                            invalid={Boolean(errors.priority)}
+                                        >
+                                            <Field.Label>
+                                                Assignee
+                                                <Field.RequiredIndicator />
+                                            </Field.Label>
+                                            <RHFMultiSelect
+                                                name="task_assignee"
+                                                control={control}
+                                                rules={{
+                                                    minLength: {
+                                                        value: 1,
+                                                        message: "This field is required"
+                                                    },
+                                                }}
+                                                        required
+                                                options={members ?? []}
                                             />
                                         </Field.Root>
 
