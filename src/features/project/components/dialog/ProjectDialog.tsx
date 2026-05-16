@@ -1,19 +1,24 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
-import type { CreateProject, ProjectStatus } from "../../project.model";
+import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
+import type { CreateProject, ProjectMember, ProjectStatus } from "../../project.model";
 import { useCreateProject } from "../../hooks/useCreateProject";
 import { toaster } from "@/components/ui/toaster";
 import { getApiErrorMessage } from "@/lib/errorMessage";
-import { Button, Dialog, Field, Fieldset, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
+import { Badge, Button, Dialog, Field, Fieldset, Flex, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
 import { useProjectDialogStore } from "../../store/projectDialogStore";
 import { useParams } from "react-router-dom";
 import { projectStatus } from "@/shared/data/projectStatus";
 import { RHFSelect } from "@/shared/components/RFHSelect";
+import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember";
+import { projectRole } from "@/shared/data/projectRole";
+import { LuTrash2 } from "react-icons/lu";
+import Empty from "@/shared/components/EmptyState";
 
 
 type ProjectFormValues = {
     project_name: CreateProject['project_name'],
     project_description: CreateProject['project_description'],
-    status: ProjectStatus
+    status: ProjectStatus,
+    project_member: ProjectMember[] 
 }
 
 
@@ -34,14 +39,26 @@ const ProjectDialog = () => {
         defaultValues: {
             project_name: '',
             project_description: '',
-            status: 'active'
+            status: 'active',
+            project_member: []
         }
+    });
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'project_member'
     });
     
     const { createProjectMutation, isCreating } = useCreateProject();
 
+    const { workspaceMembers } = useWorkspaceMember();
 
-    
+    const members = workspaceMembers?.map(item => ({
+        label: item.full_name,
+        value: item.user_id
+    }))
+
+
     const onSubmit: SubmitHandler<ProjectFormValues> = (data) => {
 
         if (!workspace_id) return;
@@ -76,9 +93,13 @@ const ProjectDialog = () => {
     return (
         <Dialog.Root 
             open={open} 
-            onOpenChange={(e) => setOpen(e.open)}
+            onOpenChange={(e) => {
+                setOpen(e.open);
+                reset();
+            }}
             lazyMount 
             placement={'center'}
+            size={{ mdDown: "full", md: "lg" }}
             // initialFocusEl={() => null}
         >
             {/* <Dialog.Trigger asChild>
@@ -174,6 +195,88 @@ const ProjectDialog = () => {
                                                 placeholder="Select status"
                                                 error={errors.status?.message}
                                             />
+                                        </Field.Root>
+
+                                        <Field.Root 
+                                            // required
+                                            // invalid={Boolean(errors.project_description)}
+                                        >
+                                            <Field.Label>
+                                                Member
+                                                <Field.RequiredIndicator
+                                                    fallback={
+                                                        <Badge size="xs" variant="surface">
+                                                            Optional
+                                                        </Badge>
+                                                    }
+                                                />
+                                            </Field.Label>
+                                            
+                                            {fields.map((field, index) => (
+                                                <Flex key={field.id} w="full" gap={4} mb={4}>
+                                                    <RHFSelect<ProjectFormValues>
+                                                        name={`project_member.${index}.user_id`}
+                                                        control={control}
+                                                        options={members ?? []}
+                                                        placeholder="Select user"
+                                                        error={errors.project_member?.[index]?.user_id?.message}
+                                                    />
+
+                                                    <RHFSelect<ProjectFormValues>
+                                                        name={`project_member.${index}.role`}
+                                                        control={control}
+                                                        options={projectRole ?? []}
+                                                        placeholder="Select user"
+                                                        error={errors.project_member?.[index]?.role?.message}
+                                                    />
+
+                                                    <Button 
+                                                        variant={'subtle'} 
+                                                        colorPalette={'red'} 
+                                                        type="button" 
+                                                        onClick={() => remove(index)}
+                                                    >
+                                                        <LuTrash2 />
+                                                    </Button>
+
+                                                </Flex>
+                                            ))}
+
+                                            { fields.length === 0 ? (
+                                                <Empty 
+                                                    description="Click add member to start"
+                                                    buttons={
+                                                        <>
+                                                            <Button
+                                                                variant={'subtle'}
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    append({
+                                                                        user_id: 0,
+                                                                        role: ''
+                                                                    })
+                                                                }
+                                                            >
+                                                                Add Member
+                                                            </Button>
+                                                        </>
+                                                    } 
+                                                />
+                                            ) : (
+                                                <Button
+                                                    variant={'subtle'}
+                                                    type="button"
+                                                    onClick={() =>
+                                                        append({
+                                                        user_id: 0,
+                                                        role: 'member'
+                                                        })
+                                                    }
+                                                >
+                                                    Add Member
+                                                </Button>
+                                            ) }
+
                                         </Field.Root>
 
                                     </Fieldset.Content>

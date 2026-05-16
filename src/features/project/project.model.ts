@@ -1,9 +1,16 @@
+import type { User } from "../signup/signUp.model";
 import type { SortOrder, ViewMode } from "./hooks/useProjectParams";
 
 
 
 
 export type ProjectStatus =  | 'planning' | 'active' | 'inactive' | 'completed';
+export type ProjectMemberRole =  | 'admin' | 'member' | 'viewer';
+
+export interface ProjectMember {
+  user_id: User['user_id'],
+  role: ProjectMemberRole | ''
+}
 
 export interface CreateProject {
     workspace_id: number

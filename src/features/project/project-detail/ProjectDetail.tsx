@@ -7,7 +7,7 @@ import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import { getProjectPallete } from "@/shared/data/projectStatus";
 import { Tooltip } from "@/components/ui/tooltip";
 import { formatReadableDate } from "@/lib/formatDate";
-import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember";
+// import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember";
 
 
 const ProjectDetail = () => {
@@ -25,9 +25,8 @@ const ProjectDetail = () => {
 
     const { project, isPending, error } = useSingleProject();
 
-    const { workspaceMembers, isPending: isWorkspaceMemberLoading, error: workspaceMemberError } = useWorkspaceMember();
+    // const { workspaceMembers, isPending: isWorkspaceMemberLoading, error: workspaceMemberError } = useWorkspaceMember();
 
-    console.log(isWorkspaceMemberLoading, workspaceMemberError)
 
     const { project_id, workspace_id } = useParams();
 
@@ -96,7 +95,7 @@ const ProjectDetail = () => {
 
                     <AvatarGroup gap="0" spaceX="-3" size="sm">
 
-                        {workspaceMembers?.map(item => (
+                        {/* {workspaceMembers?.map(item => (
                             <Tooltip 
                                 positioning={{ placement: "top" }} 
                                 openDelay={10} 
@@ -107,7 +106,7 @@ const ProjectDetail = () => {
                                     <Avatar.Fallback name={item.full_name} />
                                 </Avatar.Root>
                             </Tooltip>
-                        ))}
+                        ))} */}
 
                         <Tooltip 
                             positioning={{ placement: "top" }} 

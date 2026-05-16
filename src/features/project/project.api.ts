@@ -44,3 +44,4 @@ export const createProjectApi = async (newItem: CreateProject) => {
     );
     return res.data;
 }
+ 

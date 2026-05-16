@@ -1,32 +1,46 @@
-
-import { EmptyState, VStack } from "@chakra-ui/react"
+import {
+  ButtonGroup,
+  EmptyState,
+  VStack,
+} from "@chakra-ui/react"
+import type React from "react"
 import { LuFolderArchive } from "react-icons/lu"
 
 
+type EmptyProps = {
+  title?: string
+  description?: string
+  buttons?: React.ReactNode
+}
 
+const Empty = ({
+  title = "List is empty",
+  description = "Add item to get started",
+  buttons,
+}: EmptyProps) => {
+  return (
+    <EmptyState.Root>
+      <EmptyState.Content>
+        <EmptyState.Indicator>
+          <LuFolderArchive />
+        </EmptyState.Indicator>
 
+        <VStack textAlign="center">
+          <EmptyState.Title>{title}</EmptyState.Title>
 
-const Empty = () => {
+          <EmptyState.Description>
+            {description}
+          </EmptyState.Description>
 
-    return (
-        <>
-        
-            <EmptyState.Root>
-                <EmptyState.Content>
-                    <EmptyState.Indicator>
-                    <LuFolderArchive />
-                    </EmptyState.Indicator>
-                    <VStack textAlign="center">
-                        <EmptyState.Title>List is empty</EmptyState.Title>
-                        <EmptyState.Description>
-                            Add item to get started
-                    </EmptyState.Description>
-                    </VStack>
-                </EmptyState.Content>
-            </EmptyState.Root>
-        
-        </>
-    )
+          {buttons && (
+            <ButtonGroup>
+              {buttons}
+            </ButtonGroup>
+          )}
+        </VStack>
+      </EmptyState.Content>
+    </EmptyState.Root>
+  )
 }
 
 export default Empty
