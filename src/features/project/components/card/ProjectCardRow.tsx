@@ -1,4 +1,4 @@
-import { LuFolder } from "react-icons/lu"
+import { LuEllipsis, LuFolder } from "react-icons/lu"
 import type { ProjectList } from "../../project.model"
 import { Avatar, AvatarGroup, Badge, Separator } from "@chakra-ui/react"
 import { getProjectPallete } from "@/shared/data/projectStatus"
@@ -24,6 +24,7 @@ const ProjectCardRow = ( { item }: Props ) => {
             className="
                 border! rounded-md px-6! py-4! space-y-2! 
                 cursor-pointer
+                group 
             " 
             //  hover:-translate-y-1 hover:-translate-x-1
             //     hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
@@ -38,17 +39,26 @@ const ProjectCardRow = ( { item }: Props ) => {
             }
         >
 
-            <div className="flex justify-between items-center">
-                <LuFolder size={20} />
-                <Badge colorPalette={getProjectPallete(item.status)}>{ item.status }</Badge>
+            <div className="flex justify-between items-center ">
+                <div className="flex justify-between items-center gap-3!">
+                    <LuFolder size={20} /> 
+                    <h1 className="font-sm! font-semibold! mb-1!">{ item.project_name }</h1>
+                </div>
+                    <LuEllipsis size={20} />
+                {/* <Button size={'xs'} className="hidden! group-hover:block!">
+                    Edit
+                </Button> */}
             </div>
 
             <div>
-                <h1 className="font-sm! font-semibold! mb-1!">{ item.project_name }</h1>
+                {/* <h1 className="font-sm! font-semibold! mb-1!">{ item.project_name }</h1> */}
                 <p className="text-sm! text-(--chakra-colors-fg-muted)! line-clamp-1">
                     { item.project_description }
                 </p>
             </div>
+
+            <Badge colorPalette={getProjectPallete(item.status)}>{ item.status }</Badge>
+
 
             {/* <div>
                 <div className="flex items-center gap-2 text-sm! text-(--chakra-colors-fg-subtle)!">
@@ -63,7 +73,20 @@ const ProjectCardRow = ( { item }: Props ) => {
 
             <div className="flex items-center gap-4">
 
-                <span className="text-sm! text-(--chakra-colors-fg-muted)!">{item.completion_percentage}%</span>
+
+                <div className="flex items-center gap-2">
+
+                    {/* <ProgressCircle.Root size={'xs'} value={item.completion_percentage}>
+                        <ProgressCircle.Circle css={{ "--thickness": "2px"}}>
+                            <ProgressCircle.Track />
+                            <ProgressCircle.Range strokeLinecap="round" />
+                        </ProgressCircle.Circle>
+                    </ProgressCircle.Root> */}
+
+                <span className="text-sm! text-(--chakra-colors-fg-muted)!">
+                    {item.completion_percentage}%
+                </span>
+                </div>
 
                 <div className="flex items-center gap-2 text-sm! text-(--chakra-colors-fg-muted)! flex-1!">
                    
@@ -71,7 +94,7 @@ const ProjectCardRow = ( { item }: Props ) => {
                      {/* <LuListCheck size={17} /> */}
                 </div>
 
-                 <AvatarGroup gap="0" spaceX="-3" size="xs">
+                <AvatarGroup gap="0" spaceX="-3" size="xs">
                     {membersArray?.map(item => (
                         <Tooltip content={item} openDelay={10} positioning={{ placement: "top" }}>
                             <Avatar.Root>
@@ -80,7 +103,7 @@ const ProjectCardRow = ( { item }: Props ) => {
                         </Tooltip>
                     ))}
 
-                 </AvatarGroup>
+                </AvatarGroup>
 
 
             </div>

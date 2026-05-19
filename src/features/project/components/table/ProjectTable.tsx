@@ -17,6 +17,7 @@ const ProjectTable = ( { items }: Props ) => {
                         <Table.ColumnHeader color={'fg.muted'}>Project</Table.ColumnHeader>
                         <Table.ColumnHeader color={'fg.muted'}>Description</Table.ColumnHeader>
                         <Table.ColumnHeader color={'fg.muted'}>Status</Table.ColumnHeader>
+                        <Table.ColumnHeader color={'fg.muted'}>Team</Table.ColumnHeader>
                         <Table.ColumnHeader color={'fg.muted'}>Created At</Table.ColumnHeader>
                     </Table.Row>
                 </Table.Header>

@@ -1,7 +1,8 @@
-import { Badge, Table, Text } from "@chakra-ui/react"
+import { Avatar, AvatarGroup, Badge, Table, Text } from "@chakra-ui/react"
 import type { ProjectList } from "../../project.model"
 import { getProjectPallete } from "@/shared/data/projectStatus"
 import { formatDateTime } from "@/lib/formatDate"
+import { Tooltip } from "@/components/ui/tooltip"
 
 
 interface Props{
@@ -9,6 +10,10 @@ interface Props{
 }
 
 const ProjectTableRow = ( { item }: Props ) => {
+
+
+    const membersArray = item.project_member?.split(", ").map(name => name.trim());
+
     return (
         <Table.Row key={item.project_id}>
             <Table.Cell>
@@ -16,9 +21,25 @@ const ProjectTableRow = ( { item }: Props ) => {
                     {item.project_name}
                 </Text>
             </Table.Cell>
-            <Table.Cell>{item.project_description}</Table.Cell>
+            <Table.Cell>
+                <Text maxW={'500px'} textWrap={'wrap'}>
+                    {item.project_description}
+                </Text>
+            </Table.Cell>
             <Table.Cell>
                 <Badge colorPalette={getProjectPallete(item.status)}>{ item.status }</Badge>
+            </Table.Cell>
+            <Table.Cell>
+                <AvatarGroup gap="0" spaceX="-3" size="xs">
+                    {membersArray?.map(item => (
+                        <Tooltip content={item} openDelay={10} positioning={{ placement: "top" }}>
+                            <Avatar.Root>
+                                <Avatar.Fallback name={item} />
+                            </Avatar.Root>
+                        </Tooltip>
+                    ))}
+
+                </AvatarGroup>
             </Table.Cell>
             <Table.Cell>
                 { formatDateTime(new Date(item.created_at)) }
