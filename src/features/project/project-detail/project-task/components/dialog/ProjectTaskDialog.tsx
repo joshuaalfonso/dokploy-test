@@ -72,7 +72,7 @@ const ProjectTaskDialog = () => {
             ...data
         }
 
-        console.log(newData)
+        // console.log(newData)
 
         createTaskMutation(
             newData,

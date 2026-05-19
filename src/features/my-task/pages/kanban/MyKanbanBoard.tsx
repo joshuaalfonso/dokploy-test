@@ -33,7 +33,7 @@ const MyKanbanBoard  = () => {
       },
       "col-3": {
         id: "col-3",
-        title: "In Review",
+        title: "For Review",
         children: ["task-3"],
         totalChildrenCount: 1,
         parentId: "root",

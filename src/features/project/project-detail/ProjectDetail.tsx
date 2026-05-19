@@ -27,8 +27,6 @@ const ProjectDetail = () => {
 
     const { projectMembers} = useProjectMember();
 
-    console.log(projectMembers)
-
 
     const { project_id, workspace_id } = useParams();
 

@@ -4,6 +4,7 @@ import { LuCircleDashed, LuFlag } from "react-icons/lu"
 import { formatReadableDate } from "@/lib/formatDate"
 import { getTaskStatusPalette } from "@/shared/data/taskStatus"
 import { getTaskPriorityPalette } from "@/shared/data/taskPriority"
+import { Tooltip } from "@/components/ui/tooltip"
 
 
 interface Props {
@@ -40,21 +41,21 @@ const ProjectTaskTableRow = ( { item }: Props ) => {
                 </Flex>
             </Table.Cell>
             <Table.Cell >
-                <AvatarGroup gap="0" spaceX="-2" size="sm">
-                    <Avatar.Root>
-                        <Avatar.Fallback name="Uchiha Sasuke" />
-                    </Avatar.Root>
-
-                    <Avatar.Root>
-                        <Avatar.Fallback name="Baki Ani" />
-                    </Avatar.Root>
-
-                    <Avatar.Root>
-                        <Avatar.Fallback name="Uchiha Chan" />
-                    </Avatar.Root>
-                    <Avatar.Root variant="solid">
-                        <Avatar.Fallback>+3</Avatar.Fallback>
-                    </Avatar.Root>
+                <AvatarGroup gap="0" spaceX="-3" size="xs">
+                
+                    {item.assignees.map(item => (
+                        <Tooltip
+                            positioning={{ placement: "top" }} 
+                            openDelay={10} 
+                            content={`${item.full_name}`}
+                            key={item.user_id}
+                        >
+                            <Avatar.Root>
+                                <Avatar.Fallback name={item.full_name} />
+                            </Avatar.Root>
+                        </Tooltip>
+                    ))}
+     
                 </AvatarGroup>
             </Table.Cell>
         </Table.Row>

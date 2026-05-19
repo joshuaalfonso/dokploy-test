@@ -45,7 +45,7 @@ export const useSingleProject = () => {
     const { project_id } = useParams();
 
     const { data: project, isPending, error } = useQuery({
-        queryKey: ['projects', project_id],
+        queryKey: ['project', project_id],
         queryFn: () => getSingleProjectApi(Number(project_id!)),
         staleTime: 1000 * 60 * 5,
         gcTime: 1000 * 60 * 10,

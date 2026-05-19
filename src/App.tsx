@@ -25,7 +25,7 @@ function App() {
 
   const checkToken = useAuthStore((state) => state.checkToken);
 
-  console.log('app')
+  // console.log('app')
 
   useEffect(() => {
     checkToken();

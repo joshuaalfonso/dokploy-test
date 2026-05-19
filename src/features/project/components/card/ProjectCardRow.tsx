@@ -23,10 +23,12 @@ const ProjectCardRow = ( { item }: Props ) => {
         <li 
             className="
                 border! rounded-md px-6! py-4! space-y-2! 
-                hover:shadow-(--chakra-shadows-sm) 
-                transition-all duration-200 ease-out
                 cursor-pointer
             " 
+            //  hover:-translate-y-1 hover:-translate-x-1
+            //     hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+            //     dark:hover:shadow-[6px_6px_0px_0px_rgba(25,25,27,1)]
+                    //   transition-all duration-200 ease-out
             onClick={() =>
                 navigate(`${item.project_id}/task`, {
                     state: {

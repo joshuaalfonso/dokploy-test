@@ -1,6 +1,10 @@
 
 
-
+export interface Assignees {
+    user_id: number;
+    full_name: string;
+    email: string
+}
 
 
 export type TaskStatus = | 'todo' | 'in progress' | 'for review' | 'completed';
@@ -17,7 +21,8 @@ export interface Task {
     created_by: number;
     full_name: string;
     email: string;
-    created_at: string
+    created_at: string,
+    assignees: Assignees[]
 }
 
 
