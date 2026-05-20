@@ -50,4 +50,12 @@ export const createProjectApi = async (newItem: CreateProject) => {
     );
     return res.data;
 }
+
+export const updateProjectApi = async (newItem: CreateProject) => {
+    const res = await api.put<ApiResponse>(
+        `/${TABLE_NAME}`,
+        newItem
+    );
+    return res.data;
+}
  

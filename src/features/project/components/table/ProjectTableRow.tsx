@@ -12,7 +12,7 @@ interface Props{
 const ProjectTableRow = ( { item }: Props ) => {
 
 
-    const membersArray = item.project_member?.split(", ").map(name => name.trim());
+    // const membersArray = item.project_member?.split(", ").map(name => name.trim());
 
     return (
         <Table.Row key={item.project_id}>
@@ -31,15 +31,15 @@ const ProjectTableRow = ( { item }: Props ) => {
             </Table.Cell>
             <Table.Cell>
                 <AvatarGroup gap="0" spaceX="-3" size="xs">
-                    {membersArray?.map(item => (
-                        <Tooltip content={item} openDelay={10} positioning={{ placement: "top" }}>
+                    {item.project_member?.map(item => (
+                        <Tooltip content={item.full_name} openDelay={10} positioning={{ placement: "top" }} key={item.project_member_id}>
                             <Avatar.Root>
-                                <Avatar.Fallback name={item} />
+                                <Avatar.Fallback name={item.full_name} />
                             </Avatar.Root>
                         </Tooltip>
                     ))}
 
-                </AvatarGroup>
+                </AvatarGroup> 
             </Table.Cell>
             <Table.Cell>
                 { formatDateTime(new Date(item.created_at)) }

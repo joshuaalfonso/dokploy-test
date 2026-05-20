@@ -8,6 +8,7 @@ export type ProjectStatus =  | 'planning' | 'active' | 'inactive' | 'completed';
 export type ProjectMemberRole =  | 'admin' | 'member' | 'viewer';
 
 export interface CreateProjectMember {
+  project_member_id: ProjectMember['project_member_id'],
   user_id: User['user_id'],
   role: ProjectMemberRole | ''
 }
@@ -44,7 +45,7 @@ export interface ProjectList {
     total_task: number
     completed_task: number
     completion_percentage: number
-    project_member: string
+    project_member: ProjectMember[]
     created_at: string
 }
 

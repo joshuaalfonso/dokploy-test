@@ -1,9 +1,10 @@
 import { LuEllipsis, LuFolder } from "react-icons/lu"
 import type { ProjectList } from "../../project.model"
-import { Avatar, AvatarGroup, Badge, Separator } from "@chakra-ui/react"
+import { Avatar, AvatarGroup, Badge, IconButton, Menu, Portal, Separator } from "@chakra-ui/react"
 import { getProjectPallete } from "@/shared/data/projectStatus"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Tooltip } from "@/components/ui/tooltip"
+import { useProjectDialogStore } from "../../store/projectDialogStore"
 
 
 interface Props {
@@ -17,7 +18,18 @@ const ProjectCardRow = ( { item }: Props ) => {
 
     const location = useLocation();
 
-    const membersArray = item.project_member?.split(", ").map(name => name.trim());
+    // const membersArray = item.project_member?.split(", ").map(name => name.trim());
+
+    const setItem = useProjectDialogStore(state => state.setSelectedProject);
+    const openDialog = useProjectDialogStore(state => state.setCreateModalOpen);
+
+    const projectDetail = () => {
+        navigate(`${item.project_id}/task`, {
+            state: {
+                from: location,
+            },
+        })
+    }
 
     return (
         <li 
@@ -30,13 +42,7 @@ const ProjectCardRow = ( { item }: Props ) => {
             //     hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
             //     dark:hover:shadow-[6px_6px_0px_0px_rgba(25,25,27,1)]
                     //   transition-all duration-200 ease-out
-            onClick={() =>
-                navigate(`${item.project_id}/task`, {
-                    state: {
-                        from: location,
-                    },
-                })
-            }
+            onClick={projectDetail}
         >
 
             <div className="flex justify-between items-center ">
@@ -44,7 +50,28 @@ const ProjectCardRow = ( { item }: Props ) => {
                     <LuFolder size={20} /> 
                     <h1 className="font-sm! font-semibold! mb-1!">{ item.project_name }</h1>
                 </div>
-                    <LuEllipsis size={20} />
+                <Menu.Root lazyMount>
+                    <Menu.Trigger asChild>
+                         <IconButton size={'xs'} variant={'ghost'}  onClick={(e) => e.stopPropagation()} >
+                            <LuEllipsis />
+                        </IconButton>
+                    </Menu.Trigger>
+                    <Portal>
+                        <Menu.Positioner>
+                        <Menu.Content>
+                            <Menu.Item value="new-txt" onClick={(e) => {
+                                e.stopPropagation();
+                                projectDetail();
+                            }}>View Details</Menu.Item>
+                            <Menu.Item value="new-file" onClick={(e) => {
+                                e.stopPropagation();
+                                setItem?.(item);
+                                openDialog(true);
+                            }}>Edit</Menu.Item>
+                        </Menu.Content>
+                        </Menu.Positioner>
+                    </Portal>
+                </Menu.Root>
                 {/* <Button size={'xs'} className="hidden! group-hover:block!">
                     Edit
                 </Button> */}
@@ -95,10 +122,10 @@ const ProjectCardRow = ( { item }: Props ) => {
                 </div>
 
                 <AvatarGroup gap="0" spaceX="-3" size="xs">
-                    {membersArray?.map(item => (
-                        <Tooltip content={item} openDelay={10} positioning={{ placement: "top" }}>
+                    {item.project_member?.map(item => (
+                        <Tooltip content={item.full_name} openDelay={10} positioning={{ placement: "top" }} key={item.project_member_id}>
                             <Avatar.Root>
-                                <Avatar.Fallback name={item} />
+                                <Avatar.Fallback name={item.full_name} />
                             </Avatar.Root>
                         </Tooltip>
                     ))}
