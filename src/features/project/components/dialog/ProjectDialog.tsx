@@ -42,7 +42,7 @@ const ProjectDialog = () => {
         handleSubmit,
         control,
         reset,
-        formState: { errors, isSubmitting }
+        formState: { isDirty, errors, isSubmitting }
     } = useForm<ProjectFormValues>();
 
     const { fields, append, remove } = useFieldArray({
@@ -363,6 +363,7 @@ const ProjectDialog = () => {
                             <Button 
                                 type="submit"
                                 loading={isSubmitting || isCreating || isUpdating}
+                                disabled={!isDirty}
                             >
                                 Create 
                             </Button>

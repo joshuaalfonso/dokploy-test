@@ -18,6 +18,7 @@ const ProjectTaskTable = ( { tasks }: Props ) => {
                     <Table.ColumnHeader color={'fg.muted'}>Priority & Status</Table.ColumnHeader>
                     <Table.ColumnHeader color={'fg.muted'}>Due Date</Table.ColumnHeader>
                     <Table.ColumnHeader color={'fg.muted'}>Assignee</Table.ColumnHeader>
+                    <Table.ColumnHeader color={'fg.muted'}>Created At</Table.ColumnHeader>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>

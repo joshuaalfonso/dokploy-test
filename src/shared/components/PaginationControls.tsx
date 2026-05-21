@@ -21,8 +21,7 @@ const PaginationControls = ({
     const start = (page - 1) * limit + 1;
     const end = Math.min(page * limit, total);
 
-
-    if (totalPages < 10) return null;
+    if (totalPages <= 1) return null;
 
     return (
         <div className="flex flex-col md:flex-row items-center justify-end gap-4! md:gap-8! mt-6!">

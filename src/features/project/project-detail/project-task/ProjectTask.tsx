@@ -2,17 +2,20 @@ import LoadingSpinner from "@/shared/components/LoadingSpinner"
 import ProjectTaskDialog from "./components/dialog/ProjectTaskDialog"
 import ProjectTaskTable from "./components/table/ProjectTaskTable"
 import ProjectTaskToolbar from "./components/toolbar/ProjectTaskToolbar"
-import { useTaskByProject } from "./hooks/useTask"
+import { usePaginatedTaskByProject } from "./hooks/useTask"
 import Empty from "@/shared/components/EmptyState"
+import PaginationControls from "@/shared/components/PaginationControls"
+import { useTaskParams } from "./hooks/useTaskParams"
 
 
 
 const ProjectTask = () => {
 
+    const { setFilters } = useTaskParams();
 
-    const { tasks, isPending, error } = useTaskByProject();
+    const { data, isPending, error: paginatedTasksError } = usePaginatedTaskByProject();
 
-    if (error) return <p>Failed to load project</p>;
+    if (paginatedTasksError) return <p>Failed to load tasks</p>;
 
 
     return (
@@ -25,8 +28,18 @@ const ProjectTask = () => {
             ): (
                 <>
                     {
-                        tasks!.length > 0 ? (
-                            <ProjectTaskTable tasks={tasks ?? []} />
+                        data!.data?.length > 0 ? (
+                            <>
+                                <ProjectTaskTable tasks={data?.data ?? []} />
+                                <PaginationControls
+                                    page={data!.page}
+                                    totalPages={data!.totalPages}
+                                    total={data!.total}
+                                    onPageChange={(page) => {
+                                        setFilters({ page })
+                                    }}
+                                />
+                            </>
                         ) : (
                             <Empty />
                         )

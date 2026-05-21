@@ -106,6 +106,7 @@ const ProjectTaskDialog = () => {
             }}
             lazyMount 
             placement={'center'}
+            size={{ mdDown: "full", md: "lg" }}
             // initialFocusEl={() => null}
         >
             {/* <Dialog.Trigger asChild>
@@ -139,7 +140,7 @@ const ProjectTaskDialog = () => {
                                             </Fieldset.HelperText>
                                     </Stack>
 
-                                    <Fieldset.Content>
+                                    <Fieldset.Content gap={7}>
 
                                         <Field.Root 
                                             required 

@@ -58,6 +58,13 @@ const ProjectTaskTableRow = ( { item }: Props ) => {
      
                 </AvatarGroup>
             </Table.Cell>
+            <Table.Cell>
+                <Flex alignItems={'center'} gap="2">
+                    <span>
+                        { formatReadableDate(new Date(item.created_at)) }
+                    </span>
+                </Flex>
+            </Table.Cell>
         </Table.Row>
     )
 }

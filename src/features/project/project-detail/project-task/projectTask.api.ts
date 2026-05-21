@@ -3,15 +3,16 @@
 import api from "@/lib/axios";
 import type { ApiResponse } from "@/shared/model/apiResponse.model";
 import type { CreateTask, Task } from "./projectTask.model";
+import type { TaskParams } from "./hooks/useTaskParams";
 
-// interface ProjectResponse {
-//   data: ProjectList[]
-//   page: number,
-//   limit: number,
-//   total: number,
-//   totalPages: number
-//   hasMore: boolean
-// }
+interface TaskResponse {
+  data: Task[]
+  page: number,
+  limit: number,
+  total: number,
+  totalPages: number
+  hasMore: boolean
+}
 
 const TABLE_NAME = 'task';
 
@@ -20,6 +21,11 @@ export const getTaskByProjectApi = async (project_id: Task['project_id']) => {
     return res.data;
 }
 
+export const getPaginatedTaskByProjectApi = async (project_id: number, params: TaskParams) => {
+
+    const res = await api.get<TaskResponse>(`/${TABLE_NAME}/project/${project_id}/paginated`, { params: params});
+    return res.data;
+}
 
 // export const getPaginatedProjectByUserApi = async (workspace_id: number, params: ProjectParams) => {
 
