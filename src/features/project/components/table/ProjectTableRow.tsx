@@ -19,7 +19,7 @@ const ProjectTableRow = ( { item }: Props ) => {
             <Table.Cell>
                 <Text fontWeight={'semibold'}>
                     {item.project_name}
-                </Text>
+                </Text> 
             </Table.Cell>
             <Table.Cell>
                 <Text maxW={'500px'} textWrap={'wrap'}>
