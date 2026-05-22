@@ -3,6 +3,8 @@ import type { TaskStatus } from "@/features/project/project-detail/project-task/
 
 export const getTaskStatusPalette = (status: TaskStatus) => {
 
+    if (!status) return 'bg'
+
     switch( status) {
 
         case 'todo':

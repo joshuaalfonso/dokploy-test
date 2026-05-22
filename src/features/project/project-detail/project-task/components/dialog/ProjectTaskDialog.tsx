@@ -26,7 +26,7 @@ type TaskFormValues = {
 
 
 const ProjectTaskDialog = () => {
-     const open = useProjectTaskDialogStore(state => state.isCreateModalOpen);
+    const open = useProjectTaskDialogStore(state => state.isCreateModalOpen);
     const setOpen = useProjectTaskDialogStore(state => state.setCreateModalOpen);
 
     const { project_id } = useParams();

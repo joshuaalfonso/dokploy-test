@@ -1,10 +1,11 @@
-import { Avatar, AvatarGroup, Badge, Flex, Table, Text } from "@chakra-ui/react"
+import { Avatar, AvatarGroup, Badge, Flex, IconButton, Menu, Portal, Table, Text } from "@chakra-ui/react"
 import type { Task } from "../../projectTask.model"
-import { LuCircleDashed, LuFlag } from "react-icons/lu"
+import { LuCircleDashed, LuEllipsis, LuFlag } from "react-icons/lu"
 import { formatReadableDate } from "@/lib/formatDate"
 import { getTaskStatusPalette } from "@/shared/data/taskStatus"
 import { getTaskPriorityPalette } from "@/shared/data/taskPriority"
 import { Tooltip } from "@/components/ui/tooltip"
+import { useProjectTaskDialogStore } from "../../store/projectTaskStore"
 
 
 interface Props {
@@ -12,6 +13,10 @@ interface Props {
 }
 
 const ProjectTaskTableRow = ( { item }: Props ) => {
+
+    const setSelectedTask = useProjectTaskDialogStore(state => state.setSelectedTask);
+    const setDetailOpen = useProjectTaskDialogStore(state => state.setDetailOpen);
+    
     return (
        <Table.Row key={item.task_id}>
             <Table.Cell>
@@ -59,11 +64,32 @@ const ProjectTaskTableRow = ( { item }: Props ) => {
                 </AvatarGroup>
             </Table.Cell>
             <Table.Cell>
-                <Flex alignItems={'center'} gap="2">
-                    <span>
-                        { formatReadableDate(new Date(item.created_at)) }
-                    </span>
-                </Flex>
+                <Menu.Root lazyMount>
+                    <Menu.Trigger asChild>
+                            <IconButton size={'xs'} variant={'ghost'}  onClick={(e) => e.stopPropagation()} >
+                            <LuEllipsis />
+                        </IconButton>
+                    </Menu.Trigger>
+                    <Portal>
+                        <Menu.Positioner>
+                        <Menu.Content>
+                            <Menu.Item value="new-txt" onClick={(e) => {
+                                e.stopPropagation();
+                                // projectDetail();
+                                setDetailOpen(true);
+                                setSelectedTask(item)
+                            }}>
+                                View Details
+                            </Menu.Item>
+                            {/* <Menu.Item value="new-file" onClick={(e) => {
+                                e.stopPropagation();
+                                setItem?.(item);
+                                openDialog(true);
+                            }}>Edit</Menu.Item> */}
+                        </Menu.Content>
+                        </Menu.Positioner>
+                    </Portal>
+                </Menu.Root>
             </Table.Cell>
         </Table.Row>
     )

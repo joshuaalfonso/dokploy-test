@@ -2,11 +2,12 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 import { useProjectMember, useSingleProject } from "../hooks/useProject"
 // import { Avatar, AvatarGroup, Badge, Flex, Heading, Icon, Link, Stack, Tabs, Tooltip as ChakraTooltip, Portal, Text, Separator } from "@chakra-ui/react";
 import { Avatar, AvatarGroup, Badge, Flex, Heading, Icon, Link, Stack, Tabs, Text, Separator, Button } from "@chakra-ui/react";
-import { LuListCheck, LuMoveLeft, LuSettings } from "react-icons/lu";
+import { LuCalendar, LuListCheck, LuMoveLeft, LuSettings } from "react-icons/lu";
 import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import { getProjectPallete } from "@/shared/data/projectStatus";
 import { Tooltip } from "@/components/ui/tooltip";
 import { formatReadableDate } from "@/lib/formatDate";
+import ProjectTaskDetailDialog from "./project-task/components/dialog/ProjectTaskDetailDialog";
 // import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember";
 
 
@@ -37,6 +38,8 @@ const ProjectDetail = () => {
 
     return (
         <>
+
+            <ProjectTaskDetailDialog />
         
             <Flex 
                 flexDirection={'column'} 
@@ -198,35 +201,41 @@ const ProjectDetail = () => {
                 }
             >
                 <Tabs.List mb={8}>
+
                     <Tabs.Trigger 
                         value="task" 
-                        asChild
-                        // _selected={{
-                        //     rounded: 'none',
-                        //     borderBottom: '2px solid'
-                        // }}
+                        asChild      
                     >
-                    <Link unstyled>
-                        <LuListCheck size={16} />
-                        Task
-                    </Link>
+                        <Link unstyled>
+                            <LuListCheck size={16} />
+                            Task
+                        </Link>
                     </Tabs.Trigger>
+
+                    <Tabs.Trigger 
+                        value="calendar" 
+                        asChild
+                    >
+                        <Link unstyled>
+                            <LuCalendar size={16} />
+                            Calendar
+                        </Link>
+                    </Tabs.Trigger>
+
                     <Tabs.Trigger 
                         value="setting" 
                         asChild
-                        // _selected={{
-                        //     rounded: 'none',
-                        //     borderBottom: '2px solid'
-                        // }}
                     >
-                    <Link unstyled>
-                        <LuSettings size={16} />
-                        Setting
-                    </Link>
+                        <Link unstyled>
+                            <LuSettings size={16} />
+                            Setting
+                        </Link>
                     </Tabs.Trigger>
+
                 </Tabs.List>
 
                 <Tabs.Content value="task"><Outlet /></Tabs.Content>
+                <Tabs.Content value="calendar"><Outlet /></Tabs.Content>
                 <Tabs.Content value="setting"><Outlet /></Tabs.Content>
 
             </Tabs.Root>

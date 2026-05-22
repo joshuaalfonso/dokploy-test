@@ -2,6 +2,8 @@ import type { TaskPriority } from "@/features/project/project-detail/project-tas
 
 export const getTaskPriorityPalette = (status: TaskPriority) => {
 
+    if (!status) return 'bg'
+
     switch( status) {
 
         case 'low':

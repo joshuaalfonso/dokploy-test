@@ -20,6 +20,7 @@ import ProjectTask from './features/project/project-detail/project-task/ProjectT
 import ProjectSetting from './features/project/project-detail/project-setting/ProjectSetting'
 import { useAuthStore } from './auth-layout/store/useAuthStore'
 import { useEffect } from 'react'
+import ProjectCalendar from './features/project/project-detail/project-calendar/ProjectCalendar'
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
 
               <Route path="task" element={<ProjectTask />} />
               <Route path="setting" element={<ProjectSetting />} />
+              <Route path="calendar" element={<ProjectCalendar />} />
 
             </Route>
             <Route path="my-task" element={<MyTask />} />
