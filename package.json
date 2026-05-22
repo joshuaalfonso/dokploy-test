@@ -32,7 +32,7 @@
     "react-modern-gantt": "^0.8.5",
     "react-router-dom": "^7.14.2",
     "tailwindcss": "^4.2.4",
-    "temporal-polyfill": "^0.3.2",
+    "temporal-polyfill": "^0.3.0",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

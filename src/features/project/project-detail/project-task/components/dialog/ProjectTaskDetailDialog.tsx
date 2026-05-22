@@ -36,7 +36,7 @@ const ProjectTaskDetailDialog = () => {
                     backdropFilter="blur(4px)" 
                 />
                 <Drawer.Positioner>
-                <Drawer.Content background={'bg'} borderWidth="1px" >
+                <Drawer.Content background={'bg'}  borderLeft={'1px solid var(--chakra-colors-border)'} >
 
                     <Drawer.Header>
                         <Drawer.Title fontSize={'2xl'}>

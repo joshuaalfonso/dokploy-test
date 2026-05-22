@@ -120,9 +120,12 @@ const ProjectTaskDialog = () => {
                 </Button>
             </Dialog.Trigger> */}
             <Portal>
-                <Dialog.Backdrop />
+                <Dialog.Backdrop 
+                    bg="transparent"
+                    backdropFilter="blur(4px)" 
+                />
                 <Dialog.Positioner>
-                    <Dialog.Content>
+                    <Dialog.Content >
 
                         <Dialog.Header>
                             {/* <Dialog.Title>Workspace Form</Dialog.Title> */}
@@ -140,7 +143,7 @@ const ProjectTaskDialog = () => {
                                             </Fieldset.HelperText>
                                     </Stack>
 
-                                    <Fieldset.Content gap={7}>
+                                    <Fieldset.Content gap={7} >
 
                                         <Field.Root 
                                             required 
