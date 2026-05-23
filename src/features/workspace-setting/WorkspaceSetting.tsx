@@ -2,10 +2,25 @@ import { useParams } from "react-router-dom"
 import { useWorkspaceByUser } from "../workspace/hooks/useWorkspace";
 import { Avatar, Badge, Box, Button, Field, Fieldset, Heading, Input, Separator, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useWorkspaceMember } from "../workspace-member/hooks/useWorkspaceMember";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { WorkspaceFormValues } from "../workspace/components/dialog/WorkspaceDialog";
+import { useEffect } from "react";
 
 
 
 const WorkspaceSetting = () => {
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors, isSubmitting }
+    } = useForm<WorkspaceFormValues>({
+        defaultValues: {
+            workspace_name: '',
+            description: ''
+        }
+    });
 
 
     const { workspace_id } = useParams();
@@ -15,6 +30,33 @@ const WorkspaceSetting = () => {
     const { workspaceMembers } = useWorkspaceMember();
 
     const selectedWorkspace = user_workspaces?.find(item => item.workspace_id == (workspace_id || 0));
+
+    const onSubmit: SubmitHandler<WorkspaceFormValues> = (data) => {
+        console.log(data)
+        // createWorkspaceMutation(
+        //     data,
+        //     {
+        //         onSuccess: (response) => {
+        //             toaster.create({
+        //                 title: 'Success',
+        //                 description: response.message ?? 'Successfully created'
+        //             })
+        //         },
+        //         onError: (err) => {
+        //             toaster.create({
+        //                 title: 'Error',
+        //                 description: getApiErrorMessage(err)
+        //             })
+        //         }
+        //     }
+        // )
+    }
+
+    useEffect(() => {
+        if (selectedWorkspace) {
+            reset(selectedWorkspace)
+        }
+    }, [selectedWorkspace, reset])
 
     if (!selectedWorkspace) return <p>Workspace not found</p>
 
@@ -32,7 +74,7 @@ const WorkspaceSetting = () => {
             <div className="max-w-5xl mx-auto!">
                 <Stack mb={8}>
                     <Heading fontSize={'xl'} fontWeight={'medium'}>
-                        Details
+                        Workspace
                     </Heading>
                     <Text fontSize={'sm'} color={'fg.muted'}>
                         Manage workspace details
@@ -50,46 +92,58 @@ const WorkspaceSetting = () => {
                     </Heading>
                 </Stack> */}
 
-                <Fieldset.Root>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Fieldset.Root>
                 
-                    <Fieldset.Content>
-                    
-                        <Field.Root 
-                            required 
-                        >
-                            <Field.Label>
-                                Name
-                                <Field.RequiredIndicator />
-                            </Field.Label>
-                            <Input
-                            
-                            />
+                        <Fieldset.Content>
                         
-                        </Field.Root>
-
-                        <Field.Root>
-                            <Field.Label>
-                                Description
-                                <Field.RequiredIndicator
-                                    fallback={
-                                        <Badge size="xs" variant="surface">
-                                            Optional
-                                        </Badge>
-                                    }
+                            <Field.Root 
+                                required 
+                            >
+                                <Field.Label>
+                                    Workspace Name
+                                    <Field.RequiredIndicator />
+                                </Field.Label>
+                                <Input
+                                    {...register("workspace_name", {
+                                        required: "This field is required",
+                                    })}
                                 />
-                            </Field.Label>
-                            <Textarea placeholder="" />
-                        </Field.Root>
+                                { errors.workspace_name && (
+                                    <Field.ErrorText>
+                                        { errors.workspace_name?.message }
+                                    </Field.ErrorText>
+                                )}
+                            
+                            </Field.Root>
 
-                    </Fieldset.Content>
+                            <Field.Root>
+                                <Field.Label>
+                                    Description
+                                    <Field.RequiredIndicator
+                                        fallback={
+                                            <Badge size="xs" variant="surface">
+                                                Optional
+                                            </Badge>
+                                        }
+                                    />
+                                </Field.Label>
+                                <Textarea 
+                                    placeholder="" 
+                                    {...register("description")}
+                                />
+                            </Field.Root>
 
-                    <div className="flex justify-end mt-8!">
-                        <Button type="submit">
-                            Update Details
-                        </Button>
-                    </div>
+                        </Fieldset.Content>
 
-                </Fieldset.Root>
+                        <div className="flex justify-end mt-8!">
+                            <Button type="submit" loading={isSubmitting}>
+                                Update Details
+                            </Button>
+                        </div>
+
+                    </Fieldset.Root>
+                </form>
 
 
             </Box>

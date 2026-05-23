@@ -9,7 +9,7 @@ import { getApiErrorMessage } from "@/lib/errorMessage"
 
 
 
-type WorkspaceFormValues = {
+export type WorkspaceFormValues = {
     workspace_name: CreateWorkspace['workspace_name'],
     description: CreateWorkspace['description']
 }
@@ -119,7 +119,10 @@ const WorkspaceDialog = () => {
                                                     }
                                                 />
                                             </Field.Label>
-                                            <Textarea placeholder="" />
+                                            <Textarea 
+                                                placeholder=""
+                                                {...register("description")} 
+                                            />
                                         </Field.Root>
 
                                     </Fieldset.Content>
