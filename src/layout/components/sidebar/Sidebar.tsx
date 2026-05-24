@@ -1,8 +1,8 @@
-import { LuFolder, LuLayoutDashboard, LuListCheck, LuSettings } from "react-icons/lu"
+import { LuFolder, LuLayoutDashboard, LuListCheck, LuMessageCircleMore, LuSettings } from "react-icons/lu"
 import { SidebarNavItem } from "./SidebarNavLink"
 import { TbTargetArrow } from "react-icons/tb";
 import { useAuthStore } from "@/auth-layout/store/useAuthStore";
-import { Avatar, Flex, Span, Text } from "@chakra-ui/react";
+import { Avatar, Flex, Separator, Span, Text } from "@chakra-ui/react";
 
 
 const Sidebar = () => {
@@ -47,14 +47,26 @@ const Sidebar = () => {
                 /> */}
 
                 <SidebarNavItem
-                    to="setting"
-                    icon={LuSettings}
-                    label="Setting"
+                    to="chat"
+                    icon={LuMessageCircleMore}
+                    label="Chat"
                 />
 
             </ul>
 
-            <Flex gap={3} px={3} py={4} alignItems={'center'}>
+            <ul className="space-y-2!">
+                <SidebarNavItem
+                    to="setting"
+                    icon={LuSettings}
+                    label="Setting"
+                />
+            </ul>
+
+            <div className="py-0!">
+                <Separator />
+            </div>
+
+            <Flex gap={3} px={3} pb={4} alignItems={'center'}>
                 <Avatar.Root size={'sm'}>
                     <Avatar.Fallback name={user?.full_name} />
                 </Avatar.Root>

@@ -21,6 +21,7 @@ import ProjectSetting from './features/project/project-detail/project-setting/Pr
 import { useAuthStore } from './auth-layout/store/useAuthStore'
 import { useEffect } from 'react'
 import ProjectCalendar from './features/project/project-detail/project-calendar/ProjectCalendar'
+import Chat from './features/chat/Chat'
 
 function App() {
 
@@ -53,6 +54,7 @@ function App() {
             </Route>
             <Route path="my-task" element={<MyTask />} />
             <Route path="member" element={<WorkspaceMember />} />
+            <Route path="chat" element={<Chat />} />
             <Route path="setting" element={<WorkspaceSetting />} />
         </Route>
 

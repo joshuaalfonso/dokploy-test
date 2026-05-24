@@ -23,11 +23,11 @@ const ProjectCalendar = () => {
 
     const calendar = useCalendarApp({
         views: [
-        createViewDay(),
-        createViewWeekAgenda(),
-        createViewWeek(),
-        createViewMonthGrid(),
-        createViewMonthAgenda(),
+            createViewDay(),
+            createViewWeekAgenda(),
+            createViewWeek(),
+            createViewMonthGrid(),
+            createViewMonthAgenda(),
         ],
         plugins: [eventsService],
         isDark: colorMode === 'dark',

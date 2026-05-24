@@ -31,6 +31,7 @@
     "react-kanban-kit": "^0.0.2-beta.7",
     "react-modern-gantt": "^0.8.5",
     "react-router-dom": "^7.14.2",
+    "socket.io-client": "^4.8.3",
     "tailwindcss": "^4.2.4",
     "temporal-polyfill": "^0.3.0",
     "zustand": "^5.0.12"
