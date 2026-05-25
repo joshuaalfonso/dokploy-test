@@ -10,19 +10,21 @@ import { LuFolderArchive } from "react-icons/lu"
 type EmptyProps = {
   title?: string
   description?: string
-  buttons?: React.ReactNode
+  buttons?: React.ReactNode,
+  icon?: React.ReactNode
 }
 
 const Empty = ({
   title = "List is empty",
   description = "Add item to get started",
   buttons,
+  icon = <LuFolderArchive />
 }: EmptyProps) => {
   return (
     <EmptyState.Root>
       <EmptyState.Content>
         <EmptyState.Indicator>
-          <LuFolderArchive />
+           {icon}
         </EmptyState.Indicator>
 
         <VStack textAlign="center">

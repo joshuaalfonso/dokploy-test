@@ -1,8 +1,15 @@
 import LoadingTyping from "@/shared/components/LoadingTyping";
 import { socket } from "@/socket/socket";
-import { Flex, Input, Stack, Box, Heading, InputGroup, Avatar, Text, Group, Button, ScrollArea } from "@chakra-ui/react"
+import { Flex, Input, Stack, Box, Heading, Avatar, Text, Group, Button, ScrollArea, defineStyle } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react";
-import { LuSearch } from "react-icons/lu";
+// import { LuSearch } from "react-icons/lu";
+import { useConversation } from "./hooks/useConversation";
+import { useWorkspaceMember } from "../workspace-member/hooks/useWorkspaceMember";
+import LoadingSpinner from "@/shared/components/LoadingSpinner";
+import Empty from "@/shared/components/EmptyState";
+import { LuMessageCircleQuestion } from "react-icons/lu";
+import { useAuthStore } from "@/auth-layout/store/useAuthStore";
+import {  formatMessageDate } from "@/lib/formatDate";
 
 
 type Message = {
@@ -10,8 +17,32 @@ type Message = {
   text: string
 }
 
+const ringCss = defineStyle({
+  outlineWidth: "2px",
+  outlineColor: "colorPalette.500",
+  outlineOffset: "2px",
+  outlineStyle: "solid",
+})
+
+
 const Chat = () => {
 
+    const user = useAuthStore(state => state.user);
+
+    const { conversations, isPending: isConversationLoading, error: conversationError } = useConversation();
+
+    // const { contains } = useFilter({ sensitivity: "base" });
+
+    const { workspaceMembers } = useWorkspaceMember();
+
+    const members = workspaceMembers ? workspaceMembers.filter(item => +item.user_id != user?.user_id) : [];
+
+    // const { collection, filter } = useListCollection({
+    //     initialItems: members,
+    //     filter: contains,
+    //     itemToString: (item) => item.full_name,
+    //     itemToValue: (item) => item.user_id
+    // }); 
 
     const [messages, setMessages] = useState<Message[]>([])
     const [message, setMessage] = useState('')
@@ -22,46 +53,13 @@ const Chat = () => {
 
     // const user = useAuthStore(state => state.user)
 
-    const my_id = 'user-456';
-    const receiver_id = 'user-123';
+    const my_id = '1';
+    const receiver_id = '6';
     // const my_id = 'user-123';
     // const receiver_id = 'user-456';
 
-
-    const chats = [
-        {
-            "id": 1,
-            "name": "Alice",
-            "last_message": "See you soon",
-            "time": "11:45 AM",
-            "unread": 3
-        },
-        {
-            "id": 2,
-            "name": "Lebrom James",
-            "last_message": "Meeting starts now",
-            "time": "10:12 AM",
-            "unread": 0
-        },
-        {
-            "id": 3,
-            "name": "Kobe Bryant",
-            "last_message": "Let's play ball",
-            "time": "10:12 AM",
-            "unread": 0
-        },
-        {
-            "id": 4,
-            "name": "Si kuwan",
-            "last_message": "Are you crazy?",
-            "time": "10:12 AM",
-            "unread": 0
-        },
-    ];
-
     useEffect(() => {
         socket.connect();
-
 
         socket.emit('user:online', my_id);
 
@@ -95,16 +93,9 @@ const Chat = () => {
     const sendMessage = () => {
         if (!message.trim()) return
 
-        // const newMessage = {
-        //     senderId: my_id,
-        //     text: message,
-        // }
-
-        // setMessages((prev) => [...prev, newMessage])
-
         socket.emit('message:send', {
-            senderId: my_id,
-            receiverId: receiver_id,
+            sender_id: my_id,
+            receiver_id: receiver_id,
             text: message,
         })
 
@@ -117,8 +108,8 @@ const Chat = () => {
         setMessage(e.target.value)
 
         socket.emit('typing:start', {
-            senderId: my_id,
-            receiverId: receiver_id,
+            sender_id: my_id,
+            receiver_id,
         })
 
         if (typingTimeout.current) {
@@ -127,10 +118,10 @@ const Chat = () => {
 
         typingTimeout.current = setTimeout(() => {
             socket.emit('typing:stop', {
-                senderId: my_id,
-                receiverId: receiver_id,
+                sender_id: my_id,
+                receiver_id: receiver_id,
             })
-        }, 5000)
+        }, 1000)
     }
 
     return (
@@ -155,7 +146,7 @@ const Chat = () => {
 
                     <div className="space-y-4!">
                         <Heading>Chat</Heading>
-                        <InputGroup endElement={<LuSearch />}>
+                        {/* <InputGroup endElement={<LuSearch />}>
                             <Input 
                                 variant={'subtle'} 
                                 size={'md'} 
@@ -163,36 +154,109 @@ const Chat = () => {
                                 _placeholder={{color: 'fg.muted'}} 
                                 rounded={'md'}
                             />
-                        </InputGroup>
+                        </InputGroup> */}
+                        <ScrollArea.Root height="auto" size="xs">
+                            <ScrollArea.Viewport>
+                            <ScrollArea.Content py={4} px={4}>
+                                <Flex gap="4" flexWrap="nowrap" alignItems={'center'}>
+                                    {members?.map(item => (
+                                        <Avatar.Root css={ringCss}>
+                                            <Avatar.Fallback name={item.full_name} />
+                                        </Avatar.Root>
+                                    ))}
+                                </Flex>
+                            </ScrollArea.Content>
+                            </ScrollArea.Viewport>
+                            <ScrollArea.Scrollbar orientation="horizontal" />
+                            <ScrollArea.Corner />
+                        </ScrollArea.Root>
+                        {/* <Combobox.Root
+                            collection={collection}
+                            onInputValueChange={(e) => filter(e.inputValue)}
+                            lazyMount
+                            variant={'subtle'}
+                            rounded={'md'}
+                            _placeholder={{color: 'fg.muted'}} 
+                            openOnClick
+                        >
+                            <Combobox.Control>
+                                <Combobox.Input placeholder="Type to search" />
+                                    <Combobox.IndicatorGroup>
+                                        <Combobox.ClearTrigger />
+                                    <Combobox.Trigger />
+                                </Combobox.IndicatorGroup>
+                            </Combobox.Control>
+                            <Portal>
+                                <Combobox.Positioner>
+                                <Combobox.Content>
+                                    <Combobox.Empty>No members found</Combobox.Empty>
+                                    {collection.items.map((item) => (
+                                        <Combobox.Item item={item} key={item.user_id}>
+                                            {item.full_name}
+                                            <Combobox.ItemIndicator />
+                                        </Combobox.Item>
+                                    ))}
+                                </Combobox.Content>
+                                </Combobox.Positioner>
+                            </Portal>
+                        </Combobox.Root> */}
                     </div>
 
-                    <Stack direction={'column'} spaceY={1}>
-                        {chats?.map(item => (
-                            <Box 
-                                cursor={'pointer'} 
-                                _hover={{background: 'bg.muted'}} 
-                                py={2} 
-                                px={3} 
-                                rounded={'md'}
-                            >
-                                <Flex alignItems={'center'} gap={3} >
-                                    <Avatar.Root size={'sm'} variant={'solid'} >
-                                         <Avatar.Fallback name={item.name} />
-                                    </Avatar.Root>
-                                    
-                                    <Flex direction={'column'} gap={0}>
-                                        <Text fontSize={'sm'} fontWeight={'semibold'}>
-                                            {item.name}
-                                        </Text>
-                                        <Text fontSize={'xs'} color={'fg.muted'}>
-                                            {item.last_message}
-                                        </Text>
-                                    </Flex>
+                    { isConversationLoading ? (
+                        <>
+                            <LoadingSpinner />
+                        </>
+                    ) : (
+                        <>
+                            { conversations?.length == 0 ? (
+                                <Empty 
+                                    title="Chat is empty" 
+                                    description="Click workspace member above to begin chatting with someone."
+                                    icon={<LuMessageCircleQuestion />}
+                                />
+                            ) : (
+                                <Stack direction={'column'} spaceY={1}>
+                                    {conversations?.map(item => (
+                                        <Box 
+                                            cursor={'pointer'} 
+                                            _hover={{background: 'bg.muted'}} 
+                                            py={2} 
+                                            px={3} 
+                                            rounded={'md'}
+                                            key={item.user_id}
+                                        >
+                                            <Flex alignItems={'center'} gap={3} >
+                                                <Avatar.Root size={'sm'} variant={'solid'} >
+                                                    <Avatar.Fallback name={item.full_name} />
+                                                </Avatar.Root>
+                                                
+                                                <Flex direction={'column'} gap={0} w={'full'}>
+                                                    <Flex justifyContent={'space-between'}>
+                                                        <Text fontSize={'sm'} fontWeight={'semibold'}>
+                                                            {item.full_name}
+                                                        </Text>
+                                                        <Text fontSize={'xs'} fontWeight={''} color={'fg.muted'}>
+                                                            { formatMessageDate(new Date(item.last_message_at)) }
+                                                        </Text>
+                                                    </Flex>
+                                                    <Text fontSize={'xs'} color={'fg.muted'}>
+                                                        {item.last_message}
+                                                    </Text>
+                                                </Flex>
 
-                                </Flex>
-                            </Box>
-                        ))}
-                    </Stack>
+                                            </Flex>
+                                        </Box>
+                                    ))}
+                                </Stack>
+                            ) }
+
+                            { conversationError && (
+                                <>
+                                    Failed to load conversations
+                                </>
+                            ) }
+                        </>
+                    ) }
 
                 </Flex>
 
@@ -207,78 +271,6 @@ const Chat = () => {
                         </div>
                     </Box>
 
-
-                    {/* <Box className="space-y-4! p-4 h-full overflow-y-auto!">
-
-                        <div className="flex justify-start">
-                            
-                            <Flex alignItems={'center'} gap={3}>
-                                <div className="max-w-xs rounded-2xl rounded-bl-md bg-(--chakra-colors-bg-muted)! px-4! py-2!">
-                                    Hey, are you free later?
-                                </div>
-                            </Flex>
-
-
-                        </div>
-
-                        <div className="flex justify-end! ">
-                            
-                            <Flex alignItems={'center'} gap={3}>
-                                <div className="max-w-xs rounded-2xl rounded-br-md bg-(--chakra-colors-bg-inverted)! text-(--chakra-colors-fg-inverted)! px-4! py-2!">
-                                    Yeah, sure! What’s up?
-                                </div>
-                            </Flex>
-
-
-                        </div>
-
-                        <div className="flex justify-start">
-                            
-                            <Flex alignItems={'center'} gap={3}>
-                                <div className="max-w-xs rounded-2xl rounded-bl-md bg-(--chakra-colors-bg-muted)! px-4! py-2!">
-                                    Wanna play some games tonight?
-                                </div>
-                            </Flex>
-
-
-                        </div>
-
-                        {messages.map((msg, index) => {
-                            const isMine = msg.senderId === my_id
-
-                            return (
-                                <div
-                                    key={index}
-                                    className={`flex ${
-                                        isMine ? 'justify-end' : 'justify-start'
-                                    }`}
-                                >
-                                    <Flex alignItems={'center'} gap={3}>
-                                        <div
-                                            className={`
-                                                max-w-xs rounded-2xl px-4! py-2!
-                                                ${
-                                                    isMine
-                                                        ? 'rounded-br-md bg-(--chakra-colors-bg-inverted)! text-(--chakra-colors-fg-inverted)!'
-                                                        : 'rounded-bl-md bg-(--chakra-colors-bg-muted)!'
-                                                }
-                                            `}
-                                        >
-                                            {msg.text}
-                                        </div>
-                                    </Flex>
-                                </div>
-                            )
-                        })}
-
-                        {typing && (
-                            <Text fontSize={'sm'} color={'fg.muted'}>
-                                Typing...
-                            </Text>
-                        )}
-
-
-                    </Box> */}
 
                      <ScrollArea.Root height="full" >
                         <ScrollArea.Viewport
