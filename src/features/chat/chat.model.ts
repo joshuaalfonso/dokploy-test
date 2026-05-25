@@ -19,6 +19,7 @@ export interface Message {
     conversation_id: number
     sender_id: number
     body: string
+    text: string
     is_del: number
     created_at: string
     full_name: string

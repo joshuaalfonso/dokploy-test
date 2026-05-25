@@ -13,10 +13,10 @@ export const useConversation = () => {
     const query = useQuery({
         queryKey: ["conversations", user_id],
         queryFn: async () => {
-        if (!user_id) {
-            throw new Error("User ID is required");
-        }
-        return getConversationByUserApi(Number(user_id));
+            if (!user_id) {
+                throw new Error("User ID is required");
+            }
+            return getConversationByUserApi(Number(user_id));
         },
         enabled: !!user_id,
         staleTime: 1000 * 60 * 5,

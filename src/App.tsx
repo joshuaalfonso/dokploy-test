@@ -22,6 +22,8 @@ import { useAuthStore } from './auth-layout/store/useAuthStore'
 import { useEffect } from 'react'
 import ProjectCalendar from './features/project/project-detail/project-calendar/ProjectCalendar'
 import Chat from './features/chat/Chat'
+import ChatEmpty from './features/chat/pages/chat-empty/ChatEmpty'
+import ChatRoom from './features/chat/pages/chat-room/ChatRoom'
 
 function App() {
 
@@ -54,7 +56,10 @@ function App() {
             </Route>
             <Route path="my-task" element={<MyTask />} />
             <Route path="member" element={<WorkspaceMember />} />
-            <Route path="chat" element={<Chat />} />
+            <Route path="chat" element={<Chat />}>
+              <Route index element={<ChatEmpty />} />
+              <Route path=":conversation_id" element={<ChatRoom />} />
+            </Route>
             <Route path="setting" element={<WorkspaceSetting />} />
         </Route>
 

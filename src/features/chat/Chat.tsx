@@ -1,128 +1,98 @@
-import LoadingTyping from "@/shared/components/LoadingTyping";
-import { socket } from "@/socket/socket";
-import { Flex, Input, Stack, Box, Heading, Avatar, Text, Group, Button, ScrollArea, defineStyle } from "@chakra-ui/react"
-import { useEffect, useRef, useState } from "react";
-// import { LuSearch } from "react-icons/lu";
-import { useConversation } from "./hooks/useConversation";
-import { useWorkspaceMember } from "../workspace-member/hooks/useWorkspaceMember";
-import LoadingSpinner from "@/shared/components/LoadingSpinner";
-import Empty from "@/shared/components/EmptyState";
-import { LuMessageCircleQuestion } from "react-icons/lu";
-import { useAuthStore } from "@/auth-layout/store/useAuthStore";
-import {  formatMessageDate } from "@/lib/formatDate";
 
+import { Flex} from "@chakra-ui/react"
 
-type Message = {
-  senderId: string
-  text: string
-}
-
-const ringCss = defineStyle({
-  outlineWidth: "2px",
-  outlineColor: "colorPalette.500",
-  outlineOffset: "2px",
-  outlineStyle: "solid",
-})
+import ChatSidebar from "./components/chat-sidebar/ChatSidebar";
+import { Outlet } from "react-router-dom";
+// import { useAuthStore } from "@/auth-layout/store/useAuthStore";
+// import { useChatSocket } from "./hooks/useChatSocket";
 
 
 const Chat = () => {
 
-    const user = useAuthStore(state => state.user);
-
-    const { conversations, isPending: isConversationLoading, error: conversationError } = useConversation();
-
-    // const { contains } = useFilter({ sensitivity: "base" });
-
-    const { workspaceMembers } = useWorkspaceMember();
-
-    const members = workspaceMembers ? workspaceMembers.filter(item => +item.user_id != user?.user_id) : [];
-
-    // const { collection, filter } = useListCollection({
-    //     initialItems: members,
-    //     filter: contains,
-    //     itemToString: (item) => item.full_name,
-    //     itemToValue: (item) => item.user_id
-    // }); 
-
-    const [messages, setMessages] = useState<Message[]>([])
-    const [message, setMessage] = useState('')
-    const [onlineUsers, setOnlineUsers] = useState<string[]>([])
-    const [typing, setTyping] = useState(false);
-
-    console.log(onlineUsers)
-
     // const user = useAuthStore(state => state.user)
 
-    const my_id = '1';
-    const receiver_id = '6';
-    // const my_id = 'user-123';
-    // const receiver_id = 'user-456';
+    // useChatSocket()
 
-    useEffect(() => {
-        socket.connect();
 
-        socket.emit('user:online', my_id);
+    // const [messages, setMessages] = useState<Message[]>([])
+    // const [message, setMessage] = useState('')
+    // const [onlineUsers, setOnlineUsers] = useState<string[]>([])
+    // const [typing, setTyping] = useState(false);
 
-        socket.on('message:receive', (data: Message) => {
-            setMessages((prev) => [...prev, data])
-        });
+    // console.log(onlineUsers);
 
-        socket.on('users:online', (users: string[]) => {
-            setOnlineUsers(users)
-        });
+    // const { messages: userMessages } = useMessage();
 
-        socket.on('typing:start', () => {
-            setTyping(true)
-        });
+    // console.log(userMessages)
 
-        socket.on('typing:stop', () => {
-            setTyping(false)
-        });
+    // const my_id = 1;
+    // const receiver_id = 6;
 
-        return () => {
-            socket.disconnect()
+    // useEffect(() => {
+    //     socket.connect();
 
-            socket.off('message:receive')
-            socket.off('users:online')
-            socket.off('typing:start')
-            socket.off('typing:stop')
-        }
+    //     socket.emit('user:online', my_id);
 
-    }, []);
+    //     socket.on('message:receive', (data: Message) => {
+    //         setMessages((prev) => [...prev, data])
+    //     });
 
-    const sendMessage = () => {
-        if (!message.trim()) return
+    //     socket.on('users:online', (users: string[]) => {
+    //         setOnlineUsers(users)
+    //     });
 
-        socket.emit('message:send', {
-            sender_id: my_id,
-            receiver_id: receiver_id,
-            text: message,
-        })
+    //     socket.on('typing:start', () => {
+    //         setTyping(true)
+    //     });
 
-        setMessage('');
-    };
+    //     socket.on('typing:stop', () => {
+    //         setTyping(false)
+    //     });
 
-    const typingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+    //     return () => {
+    //         socket.disconnect()
 
-    const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMessage(e.target.value)
+    //         socket.off('message:receive')
+    //         socket.off('users:online')
+    //         socket.off('typing:start')
+    //         socket.off('typing:stop')
+    //     }
 
-        socket.emit('typing:start', {
-            sender_id: my_id,
-            receiver_id,
-        })
+    // }, []);
 
-        if (typingTimeout.current) {
-            clearTimeout(typingTimeout.current)
-        }
+    // const sendMessage = () => {
+    //     if (!message.trim()) return
 
-        typingTimeout.current = setTimeout(() => {
-            socket.emit('typing:stop', {
-                sender_id: my_id,
-                receiver_id: receiver_id,
-            })
-        }, 1000)
-    }
+    //     socket.emit('message:send', {
+    //         sender_id: my_id,
+    //         receiver_id: receiver_id,
+    //         text: message,
+    //     })
+
+    //     setMessage('');
+    // };
+
+    // const typingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    // const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     setMessage(e.target.value)
+
+    //     socket.emit('typing:start', {
+    //         sender_id: my_id,
+    //         receiver_id,
+    //     })
+
+    //     if (typingTimeout.current) {
+    //         clearTimeout(typingTimeout.current)
+    //     }
+
+    //     typingTimeout.current = setTimeout(() => {
+    //         socket.emit('typing:stop', {
+    //             sender_id: my_id,
+    //             receiver_id: receiver_id,
+    //         })
+    //     }, 1000)
+    // }
 
     return (
         
@@ -135,7 +105,11 @@ const Chat = () => {
                 height={'85vh'}
             >
 
-                <Flex 
+                <ChatSidebar />
+
+                <Outlet />
+
+                {/* <Flex 
                     direction={'column'} 
                     gap={4} 
                     maxW={'350px'} 
@@ -146,15 +120,6 @@ const Chat = () => {
 
                     <div className="space-y-4!">
                         <Heading>Chat</Heading>
-                        {/* <InputGroup endElement={<LuSearch />}>
-                            <Input 
-                                variant={'subtle'} 
-                                size={'md'} 
-                                placeholder="Search contacts"
-                                _placeholder={{color: 'fg.muted'}} 
-                                rounded={'md'}
-                            />
-                        </InputGroup> */}
                         <ScrollArea.Root height="auto" size="xs">
                             <ScrollArea.Viewport>
                             <ScrollArea.Content py={4} px={4}>
@@ -170,36 +135,7 @@ const Chat = () => {
                             <ScrollArea.Scrollbar orientation="horizontal" />
                             <ScrollArea.Corner />
                         </ScrollArea.Root>
-                        {/* <Combobox.Root
-                            collection={collection}
-                            onInputValueChange={(e) => filter(e.inputValue)}
-                            lazyMount
-                            variant={'subtle'}
-                            rounded={'md'}
-                            _placeholder={{color: 'fg.muted'}} 
-                            openOnClick
-                        >
-                            <Combobox.Control>
-                                <Combobox.Input placeholder="Type to search" />
-                                    <Combobox.IndicatorGroup>
-                                        <Combobox.ClearTrigger />
-                                    <Combobox.Trigger />
-                                </Combobox.IndicatorGroup>
-                            </Combobox.Control>
-                            <Portal>
-                                <Combobox.Positioner>
-                                <Combobox.Content>
-                                    <Combobox.Empty>No members found</Combobox.Empty>
-                                    {collection.items.map((item) => (
-                                        <Combobox.Item item={item} key={item.user_id}>
-                                            {item.full_name}
-                                            <Combobox.ItemIndicator />
-                                        </Combobox.Item>
-                                    ))}
-                                </Combobox.Content>
-                                </Combobox.Positioner>
-                            </Portal>
-                        </Combobox.Root> */}
+                        
                     </div>
 
                     { isConversationLoading ? (
@@ -224,6 +160,7 @@ const Chat = () => {
                                             px={3} 
                                             rounded={'md'}
                                             key={item.user_id}
+                                            onClick={() => navigate(`?chat_id=${item.conversation_id}`)}
                                         >
                                             <Flex alignItems={'center'} gap={3} >
                                                 <Avatar.Root size={'sm'} variant={'solid'} >
@@ -258,9 +195,9 @@ const Chat = () => {
                         </>
                     ) }
 
-                </Flex>
+                </Flex> */}
 
-                <Flex direction={'column'} gap={4} flex={1}>
+                {/* <Flex direction={'column'} gap={4} flex={1}>
 
                     <Box>
                         <div className="flex items-center gap-3!">
@@ -294,7 +231,7 @@ const Chat = () => {
                             <ScrollArea.Content spaceY="4" textStyle="sm">
                                 <Box className="space-y-4! p-4 h-full overflow-y-auto!" pr={6}>
                                     {messages.map((msg, index) => {
-                                        const isMine = msg.senderId === my_id
+                                        const isMine = msg.sender_id == my_id
 
                                         return (
                                             <div
@@ -322,10 +259,6 @@ const Chat = () => {
                                     })}
 
                                     {typing && (
-                                        // <Text fontSize={'sm'} color={'fg.muted'}>
-                                        //     Typing...
-                                        // </Text>
-                                        // <LoadingTyping />
                                         <div
                                              
                                                 className={`flex justify-start!`}
@@ -371,7 +304,7 @@ const Chat = () => {
                     </Box>
                     
 
-                </Flex>
+                </Flex> */}
 
             </Flex>
         
