@@ -16,3 +16,8 @@ export const getMessageApi = async (conversation_id: Conversation['conversation_
     const res = await api.get<Message[]>(`/${TABLE_NAME}/${conversation_id}/message`);
     return res.data;
 }
+
+export const getConversationDetailApi = async (conversation_id: Conversation['conversation_id']) => {
+    const res = await api.get<Conversation>(`/${TABLE_NAME}/${conversation_id}/detail`);
+    return res.data;
+}

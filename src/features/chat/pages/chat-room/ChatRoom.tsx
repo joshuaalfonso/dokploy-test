@@ -7,17 +7,29 @@ import ChatInput from "./components/ChatInput"
 import { useParams } from "react-router-dom"
 import { useAuthStore } from "@/auth-layout/store/useAuthStore"
 import { useChatSocket } from "../../hooks/useChatSocket"
+import { useConversationDetail } from "../../hooks/useConversation"
 
 
 
 const ChatRoom = () => {
 
-    const { conversation_id } = useParams()
+    const { conversation_id, receiver_id } = useParams()
     const user = useAuthStore((s) => s.user)
 
-    useChatSocket(conversation_id, user?.user_id)
+    const isNewChat = !conversation_id;
+
+    useChatSocket(
+        isNewChat ? undefined : conversation_id,
+        user?.user_id
+    )
 
     const { messages, isPending, error } = useMessage();
+
+    const { conversation } = useConversationDetail();
+
+        const targetReceiverId = isNewChat
+        ? receiver_id
+        : String(conversation?.user_id);
 
     if (isPending) return <LoadingSpinner />;
 
@@ -30,7 +42,10 @@ const ChatRoom = () => {
 
                 <ChatHeader />
                 <ChatMessage messages={messages ?? []} />
-                <ChatInput conversation_id={conversation_id ?? ''} />
+
+                {targetReceiverId && (
+                    <ChatInput receiver_id={targetReceiverId} />
+                )}
 
             </Flex>
         

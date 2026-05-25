@@ -23,7 +23,7 @@ export const useMessage = () => {
 
     return {
         messages: query.data,
-        isPending: query.isPending,
+        isPending: query.fetchStatus === 'fetching',
         error: query.error,
     };
 };

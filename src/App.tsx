@@ -58,6 +58,7 @@ function App() {
             <Route path="member" element={<WorkspaceMember />} />
             <Route path="chat" element={<Chat />}>
               <Route index element={<ChatEmpty />} />
+              <Route path="new/:receiver_id" element={<ChatRoom />} />
               <Route path=":conversation_id" element={<ChatRoom />} />
             </Route>
             <Route path="setting" element={<WorkspaceSetting />} />
