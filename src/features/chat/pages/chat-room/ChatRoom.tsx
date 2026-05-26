@@ -5,7 +5,7 @@ import LoadingSpinner from "@/shared/components/LoadingSpinner"
 import ChatMessage from "./components/ChatMessage"
 import ChatInput from "./components/ChatInput"
 import { useParams } from "react-router-dom"
-import { useAuthStore } from "@/auth-layout/store/useAuthStore"
+// import { useAuthStore } from "@/auth-layout/store/useAuthStore"
 import { useChatSocket } from "../../hooks/useChatSocket"
 import { useConversationDetail } from "../../hooks/useConversation"
 
@@ -14,13 +14,13 @@ import { useConversationDetail } from "../../hooks/useConversation"
 const ChatRoom = () => {
 
     const { conversation_id, receiver_id } = useParams()
-    const user = useAuthStore((s) => s.user)
+    // const user = useAuthStore((s) => s.user)
 
     const isNewChat = !conversation_id;
 
     useChatSocket(
         isNewChat ? undefined : conversation_id,
-        user?.user_id
+        // user?.user_id
     )
 
     const { messages, isPending, error } = useMessage();
