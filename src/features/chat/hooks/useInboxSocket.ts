@@ -60,6 +60,7 @@ export const useInboxSocket = () => {
         socket.off("users:online")
         socket.off("conversation:new")
         socket.off("conversation:update")
+        socket.disconnect()
     }
     }, [user_id])
 

@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/auth-layout/store/useAuthStore";
 import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember"
-import { Avatar, Box, defineStyle, Flex, Heading, ScrollArea, Stack, Text } from "@chakra-ui/react"
+import { Avatar, Box, defineStyle, Flex, Heading, ScrollArea, Stack, Text, Float, Circle } from "@chakra-ui/react"
 import { useConversation } from "../../hooks/useConversation";
 // import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import Empty from "@/shared/components/EmptyState";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { formatMessageDate } from "@/lib/formatDate";
 // import "@aejkatappaja/phantom-ui";
 import ConversationLoader from "./components/ConversationLoader";
+import { useChatStore } from "../../store/useChatStore";
 
 
 const ringCss = defineStyle({
@@ -25,10 +26,18 @@ const ChatSidebar = () => {
     const { workspaceMembers } = useWorkspaceMember();
 
     const user = useAuthStore(state => state.user);
+    const onlineUsers = useChatStore(state => state.onlineUsers);
+
+    console.log(onlineUsers)
 
     const members = workspaceMembers ? workspaceMembers.filter(item => +item.user_id != user?.user_id) : [];
 
     const { conversations, isPending: isConversationLoading, error: conversationError } = useConversation();
+
+    const enrichedConversations = conversations?.map(conv => ({
+        ...conv,
+        isOnline: onlineUsers.includes(conv.user_id),
+    }));
 
     const navigate = useNavigate();
 
@@ -87,7 +96,7 @@ const ChatSidebar = () => {
                     ) : (
                         <Stack direction={'column'} spaceY={1}>
 
-                            {conversations?.map(item => (
+                            {enrichedConversations?.map(item => (
                                 <Box
                                     cursor={'pointer'} 
                                     _hover={{background: 'bg.muted'}} 
@@ -101,6 +110,16 @@ const ChatSidebar = () => {
 
                                         <Avatar.Root size={'sm'} variant={'solid'} >
                                             <Avatar.Fallback name={item.full_name} />
+                                            <Float placement="bottom-end" offsetX="1" offsetY="1">
+                                            {item.isOnline && (
+                                                <Circle
+                                                    bg="green.500"
+                                                    size="8px"
+                                                    outline="0.2em solid"
+                                                    outlineColor="bg"
+                                                />
+                                            )}
+                                        </Float>
                                         </Avatar.Root>
                                         
                                         <Flex direction={'column'} gap={0} w={'full'}>
