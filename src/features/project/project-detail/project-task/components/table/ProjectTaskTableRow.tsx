@@ -24,7 +24,9 @@ const ProjectTaskTableRow = ( { item }: Props ) => {
                     {item.task_title}
                 </Text>
             </Table.Cell>
-            <Table.Cell>{item.task_description}</Table.Cell>
+            <Table.Cell>
+                <Text maxW={'200px'} truncate>{item.task_description}</Text>
+            </Table.Cell>
             <Table.Cell>
 
                 <Flex gap={3}>

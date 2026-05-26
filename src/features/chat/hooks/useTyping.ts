@@ -10,6 +10,7 @@ export const useTyping = (
 const timeoutRef  = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const emitTyping = () => {
+
         socket.emit('typing:start', {
             sender_id,
             receiver_id,

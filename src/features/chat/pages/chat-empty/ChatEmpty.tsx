@@ -1,4 +1,4 @@
-import { LuMessageCircleQuestion } from "react-icons/lu"
+// import { LuMessageCircleQuestion } from "react-icons/lu"
 
 
 const ChatEmpty = () => {
@@ -7,7 +7,7 @@ const ChatEmpty = () => {
 
 
             <div className="flex flex-col justify-center items-center gap-4">
-                <LuMessageCircleQuestion size={40} />
+                {/* <LuMessageCircleQuestion size={40} /> */}
                 <h1 className="text-(--chakra-colors-fg-muted) text-center">
                     Yo haven't open any message yet, <br /> please select a message
                 </h1>

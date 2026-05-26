@@ -2,12 +2,13 @@ import { useAuthStore } from "@/auth-layout/store/useAuthStore";
 import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember"
 import { Avatar, Box, defineStyle, Flex, Heading, ScrollArea, Stack, Text } from "@chakra-ui/react"
 import { useConversation } from "../../hooks/useConversation";
-import LoadingSpinner from "@/shared/components/LoadingSpinner";
+// import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import Empty from "@/shared/components/EmptyState";
 import { LuMessageCircleQuestion } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { formatMessageDate } from "@/lib/formatDate";
-
+// import "@aejkatappaja/phantom-ui";
+import ConversationLoader from "./components/ConversationLoader";
 
 
 const ringCss = defineStyle({
@@ -62,13 +63,22 @@ const ChatSidebar = () => {
                 
             </div>
 
+            {/* <phantom-ui loading={true}>
+                <div className="card">
+                    <img src={ "/placeholder.png"} className="avatar" />
+                    <h3>{"Placeholder Name"}</h3>
+                    <p>{"A short bio goes here for measurement."}</p>
+                </div>
+            </phantom-ui> */}
+
             { isConversationLoading ? (
                 <>
-                    <LoadingSpinner />
+                    {/* <LoadingSpinner /> */}
+                    <ConversationLoader count={6} />
                 </>
             ) : (
                 <>
-                    { conversations?.length == 0 ? (
+                    { conversations?.length === 0 && !conversationError ? (
                         <Empty
                             title="Chat is empty" 
                             description="Click workspace member above to begin chatting with someone."
@@ -76,6 +86,7 @@ const ChatSidebar = () => {
                         />
                     ) : (
                         <Stack direction={'column'} spaceY={1}>
+
                             {conversations?.map(item => (
                                 <Box
                                     cursor={'pointer'} 
@@ -87,6 +98,7 @@ const ChatSidebar = () => {
                                     onClick={() => navigate(`${item.conversation_id}`)}
                                 >
                                     <Flex alignItems={'center'} gap={3} >
+
                                         <Avatar.Root size={'sm'} variant={'solid'} >
                                             <Avatar.Fallback name={item.full_name} />
                                         </Avatar.Root>

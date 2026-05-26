@@ -1,6 +1,8 @@
 import { useAuthStore } from "@/auth-layout/store/useAuthStore"
 import type { Message } from "@/features/chat/chat.model"
 import { Box, Flex, ScrollArea } from "@chakra-ui/react"
+import { TypingIndicatorSummary } from "./typing/TypingIndicatorSummary"
+// import { TypingUser } from "./TypingUser"
 
 
 
@@ -66,6 +68,10 @@ const ChatMessage = ({ messages }: Props) => {
                                 </div>
                             )
                         })}
+
+                        {/* <TypingUser userId={} /> */}
+
+                        <TypingIndicatorSummary />
 
                         {/* {typing && (
                             <div
