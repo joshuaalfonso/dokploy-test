@@ -33,10 +33,14 @@ export const useMessage = () => {
   // flatten all pages into 1 array
 //   const messages = query.data?.pages.flatMap((p: any) => p.data) || [];
 
-    const messages =
-    query.data?.pages
-        .flatMap((p) => p.data)
-        .reverse() || [];
+    // const messages =
+    // query.data?.pages
+    //     .flatMap((p) => p.data)
+    //     .reverse() || [];
+
+  const messages =
+  [...(query.data?.pages.flatMap((p) => p.data) || [])]
+    .reverse();
 
     return {
         messages,

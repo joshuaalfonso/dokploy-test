@@ -1,7 +1,7 @@
-import { Center, Flex } from "@chakra-ui/react"
+import {  Flex } from "@chakra-ui/react"
 import ChatHeader from "./components/ChatHeader"
 import { useMessage } from "../../hooks/useMessage"
-import LoadingSpinner from "@/shared/components/LoadingSpinner"
+// import LoadingSpinner from "@/shared/components/LoadingSpinner"
 import ChatMessage from "./components/ChatMessage"
 import ChatInput from "./components/ChatInput"
 import { useParams } from "react-router-dom"
@@ -23,7 +23,7 @@ const ChatRoom = () => {
         // user?.user_id
     )
 
-    const { messages, isPending, error } = useMessage();
+    const { messages, error } = useMessage();
 
     const { conversation } = useConversationDetail();
 

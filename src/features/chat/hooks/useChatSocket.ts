@@ -33,22 +33,34 @@ export const useChatSocket = (
       // console.log(message)
 
       try {
-        queryClient.setQueryData(
-          ["messages", conversationId],
-          (old: Message[] = []) => [...old, message]
-        )
-        // Notification.requestPermission().then(permission => {
-        //   if (permission === "granted") {
-        //     new Notification("Hello!", {
-        //       body: "This is a push notification",
-        //     });
-        //   }
-        // });
+
+        // queryClient.setQueryData(
+        //   ["messages", conversationId],
+        //   (old: Message[] = []) => [...old, message]
+        // )
+
+
+      queryClient.setQueryData(
+        ["messages", conversationId],
+        (old: any) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            pages: [
+              {
+                ...old.pages[0],
+                data: [...old.pages[0].data, message],
+              },
+            ],
+          };
+        }
+      );
+        
       } catch (e) {
         console.error("setQueryData error:", e)
       }
 
-      // console.log("conversation id is:", conversationId)
     }
 
     socket.on("message:receive", handler)
