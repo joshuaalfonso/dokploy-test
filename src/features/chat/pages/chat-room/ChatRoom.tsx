@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react"
+import { Center, Flex } from "@chakra-ui/react"
 import ChatHeader from "./components/ChatHeader"
 import { useMessage } from "../../hooks/useMessage"
 import LoadingSpinner from "@/shared/components/LoadingSpinner"
@@ -31,7 +31,11 @@ const ChatRoom = () => {
         ? receiver_id
         : String(conversation?.user_id);
 
-    if (isPending) return <LoadingSpinner />;
+    // if (isPending) return (
+    //     <Center w={'full'}>
+    //         <LoadingSpinner />
+    //     </Center>
+    // );
 
     if (error) return <p>Failed to load messages</p>
 

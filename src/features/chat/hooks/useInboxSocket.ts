@@ -45,6 +45,15 @@ export const useInboxSocket = () => {
             }
         );
 
+        if (document.visibilityState === "visible") return;
+
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("New Message", {
+            body: message.last_message,
+            icon: "/vite.svg", // optional but recommended
+            });
+        }
+
     }
 
     socket.on("conversation:new", (conv: Message) => {

@@ -37,6 +37,13 @@ export const useChatSocket = (
           ["messages", conversationId],
           (old: Message[] = []) => [...old, message]
         )
+        // Notification.requestPermission().then(permission => {
+        //   if (permission === "granted") {
+        //     new Notification("Hello!", {
+        //       body: "This is a push notification",
+        //     });
+        //   }
+        // });
       } catch (e) {
         console.error("setQueryData error:", e)
       }

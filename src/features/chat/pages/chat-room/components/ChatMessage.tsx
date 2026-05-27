@@ -1,8 +1,10 @@
 import { useAuthStore } from "@/auth-layout/store/useAuthStore"
 import type { Message } from "@/features/chat/chat.model"
-import { Box, Flex, ScrollArea } from "@chakra-ui/react"
+import { Box, Flex, ScrollArea, Text } from "@chakra-ui/react"
 import { TypingIndicatorSummary } from "./typing/TypingIndicatorSummary"
 import { useEffect, useLayoutEffect, useRef } from "react"
+import { useMessage } from "@/features/chat/hooks/useMessage"
+import { formatMessageDate } from "@/lib/formatDate"
 // import { TypingUser } from "./TypingUser"
 
 
@@ -19,38 +21,85 @@ const ChatMessage = ({ messages }: Props) => {
 
     const user = useAuthStore(state => state.user);
 
+    const {
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useMessage();
+
     const viewportRef = useRef<HTMLDivElement>(null);
+    const loadingOlderRef = useRef(false);
+    const prevScrollHeightRef = useRef<number>(0);
+    const isAtBottomRef = useRef(true);
+
+    useLayoutEffect(() => {
+        const el = viewportRef.current;
+            if (!el) return;
+
+            requestAnimationFrame(() => {
+                el.scrollTop = el.scrollHeight;
+            });
+    }, []);
 
     useEffect(() => {
         const el = viewportRef.current;
         if (!el) return;
 
-        const threshold = 150; // px from bottom
-        const isNearBottom =
+        if (!isAtBottomRef.current) return;
+
+        requestAnimationFrame(() => {
+            el.scrollTop = el.scrollHeight;
+        });
+    }, [messages]);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const el = e.currentTarget;
+
+        const threshold = 100;
+
+        isAtBottomRef.current =
             el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
 
-        if (isNearBottom) {
-            el.scrollTo({
-                top: el.scrollHeight,
-                behavior: "smooth",
-            });
+        // reached top → fetch older
+        if (
+            el.scrollTop <= 0 &&
+            hasNextPage &&
+            !isFetchingNextPage &&
+            !loadingOlderRef.current
+        ) {
+            loadingOlderRef.current = true;
+
+            prevScrollHeightRef.current = el.scrollHeight;
+
+            fetchNextPage();
         }
-    }, [messages]);
+    };
 
     useLayoutEffect(() => {
         const el = viewportRef.current;
         if (!el) return;
 
-       requestAnimationFrame(() => {
-    el.scrollTo({
-        top: el.scrollHeight,
-        behavior: "smooth",
-    });
-});
-    }, []);
+
+        // restoring position after loading older messages
+        if (loadingOlderRef.current) {
+            const newHeight = el.scrollHeight;
+            const heightDiff = newHeight - prevScrollHeightRef.current;
+
+            el.scrollTop = heightDiff;
+
+            loadingOlderRef.current = false;
+            return;
+        }
+
+        // auto scroll for new messages only
+        if (isAtBottomRef.current) {
+            el.scrollTop = el.scrollHeight;
+        }
+    }, [messages]);
+
 
     return (
-        <ScrollArea.Root height="full" >
+        <ScrollArea.Root style={{ height: "100%" }}  >
             <ScrollArea.Viewport
                 // css={{
                 //     "--scroll-shadow-size": "4rem",
@@ -69,20 +118,27 @@ const ChatMessage = ({ messages }: Props) => {
                 //     },
                 // }}
                 ref={viewportRef}
+                onScroll={handleScroll}
+                style={{
+                    height: "100%",
+                    padding: 16,
+                }}
             >
                 <ScrollArea.Content spaceY="4" textStyle="sm">
-                    <Box className="space-y-4! p-4 h-full overflow-y-auto!" pr={6}>
-                        {messages.map((msg, index) => {
+                    <Box className="space-y-4! p-4 " pr={6}>
+                        {messages.map((msg) => {
                             const isMine = msg.sender_id == user?.user_id
 
                             return (
                                 <div
-                                    key={index}
+                                    key={msg.message_id}
                                     className={`flex ${
                                         isMine ? 'justify-end' : 'justify-start'
                                     }`}
                                 >
                                     <Flex alignItems={'center'} gap={3}>
+
+                                        {isMine && (<Text fontSize={'xs'} color={'fg.muted'}>{ formatMessageDate(new Date(msg.created_at)) }</Text>)}
                                         <div
                                             className={`
                                                 max-w-xs rounded-2xl px-4! py-2!
@@ -95,6 +151,7 @@ const ChatMessage = ({ messages }: Props) => {
                                         >
                                             {msg.text}
                                         </div>
+                                        {!isMine && (<Text fontSize={'xs'} color={'fg.muted'}>{ formatMessageDate(new Date(msg.created_at)) }</Text>)}
                                     </Flex>
                                 </div>
                             )
