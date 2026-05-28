@@ -2,14 +2,17 @@ import { Outlet } from "react-router-dom"
 import Sidebar from "./components/sidebar/Sidebar"
 import Header from "./components/header/Header"
 import { useEffect } from "react"
+import { useChatSocket } from "@/features/chat/hooks/useChatSocket"
 
 
 const Layout = () => {
 
+  useChatSocket();
+
   useEffect(() => {
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission();
-    }
+    // if ("Notification" in window && Notification.permission === "default") {
+    //   Notification.requestPermission();
+    // }
   }, []);
 
   return (

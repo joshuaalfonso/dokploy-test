@@ -12,7 +12,7 @@ export interface Conversation {
     last_message_id: number,
     last_message: string,
     last_message_at: string
-    unread_count: number
+    last_read_message_id: number
     created_at: string
 }
 

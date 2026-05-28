@@ -3,7 +3,6 @@ import { Flex} from "@chakra-ui/react"
 
 import ChatSidebar from "./components/chat-sidebar/ChatSidebar";
 import { Outlet } from "react-router-dom";
-import { useInboxSocket } from "./hooks/useInboxSocket";
 // import { useAuthStore } from "@/auth-layout/store/useAuthStore";
 // import { useChatSocket } from "./hooks/useChatSocket";
 
@@ -95,7 +94,6 @@ const Chat = () => {
     //     }, 1000)
     // }
 
-    useInboxSocket();
 
     return (
         

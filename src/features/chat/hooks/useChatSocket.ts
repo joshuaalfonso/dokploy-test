@@ -1,92 +1,87 @@
-import { useEffect } from "react"
+import { useAuthStore } from "@/auth-layout/store/useAuthStore"
 import { socket } from "@/socket/socket"
+import { useEffect } from "react"
+import type { Conversation, Message } from "../chat.model"
 import { useQueryClient } from "@tanstack/react-query"
-import { useChatStore } from "@/features/chat/store/useChatStore"
-import type {  Conversation, Message } from "../chat.model"
-// import { useAuthStore } from "@/auth-layout/store/useAuthStore"
-
-// type MessagesPage = {
-//   data: Message[];
-// };
-
-export const useChatSocket = (
-  conversationId?: string
-) => {
-
-  const queryClient = useQueryClient();
+import { useChatStore } from "../store/useChatStore"
 
 
-  // const user_id = useAuthStore(state => state.user?.user_id)
 
-  const setTyping = useChatStore((s) => s.setTyping)
-  // const setOnlineUsers = useChatStore((s) => s.setOnlineUsers)
+export const useChatSocket = () => {
 
-  const handler = ({message}: {message: Message, conversation: Conversation}) => {
-    // console.log(message)
-    // console.log(conversation)
+    const user_id = useAuthStore(state => state.user?.user_id);
+    const setOnlineUsers = useChatStore((s) => s.setOnlineUsers)
+    const queryClient = useQueryClient()
 
-    try {
+    useEffect(() => {
+    if (!user_id) return
 
-      queryClient.setQueryData(["messages", conversationId], (old: any) => {
-        if (!old?.pages?.length) return old
-
-        const firstPage = old.pages[0]
-
-        return {
-          ...old,
-          pages: [
-            {
-              ...firstPage,
-              data: [message, ...firstPage.data],
-            },
-            ...old.pages.slice(1),
-          ],
-        }
-      })
-
-      // queryClient.setQueryData(
-      //   ["conversations", user_id],
-      //   (old: Conversation[] | undefined) => {
-      //     // console.log('old inbox: ' + old)
-      //     if (!Array.isArray(old)) return [];
-
-      //     const filtered = old.filter(
-      //       c => c.conversation_id != conversation.conversation_id
-      //     )
-
-      //     return [conversation, ...filtered]
-
-      //   }
-      // )
-
-    } catch (e) {
-      console.error("setQueryData error:", e)
+    if (!socket.connected) {
+        socket.connect()
     }
 
-  }
+    socket.emit("user:online", user_id)
 
-  // JOIN CONVERSATION ROOM
-  useEffect(() => {
-    if (!conversationId) return;
+    socket.on("users:online", setOnlineUsers);
 
-    socket.on("typing:start", ({ sender_id }) => {
-      setTyping(sender_id, true)
+    const conversationUpdateHandler = ({conversation}: {conversation: Conversation}) => {
+        //   console.log(conversation)
+
+        queryClient.setQueryData(
+            ["conversations", user_id],
+            (old: Conversation[] | undefined) => {
+            // console.log(old)
+            if (!Array.isArray(old)) return [];
+
+            const last_read_message_id = old.find(c => c.conversation_id == conversation.conversation_id)?.last_read_message_id;
+
+            const filtered = old.filter(
+                c => c.conversation_id != conversation.conversation_id
+            )
+
+            return [{...conversation, last_read_message_id}, ...filtered]
+
+            }
+        )
+
+        queryClient.setQueryData(
+            ["conversation", String(user_id)],
+            (old: Conversation | undefined) => {
+                if (!old) return
+                return {...old, last_message_id: conversation.last_message_id}
+            }
+        )
+
+        if (document.visibilityState === "visible") return;
+
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("New Message", {
+                body: conversation.last_message,
+                icon: "/vite.svg", 
+            });
+        }
+
+    }
+
+    socket.on("conversation:new", (conv: Message) => {
+        // queryClient.setQueryData(["conversations"], (old: Conversation[] = []) => [
+        //     conv,
+        //     ...old
+        // ])
+
+        console.log(conv)
     })
+    
 
-    socket.on("typing:stop", ({ sender_id }) => {
-      setTyping(sender_id, false)
-    })
-
-    socket.emit("conversation:join", conversationId)
-
-    socket.on("message:receive", handler)
+    socket.on("conversation:update", conversationUpdateHandler)
 
     return () => {
-      socket.emit("conversation:leave", conversationId)
-      socket.off("message:receive")
-      socket.off("typing:start")
-      socket.off("typing:stop");
+        socket.off("users:online")
+        socket.off("conversation:new")
+        socket.off("conversation:update")
+        socket.disconnect()
     }
-  }, [conversationId, queryClient])
-}
+    }, [user_id])
 
+
+}
