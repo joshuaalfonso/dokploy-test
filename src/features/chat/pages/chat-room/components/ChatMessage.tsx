@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/auth-layout/store/useAuthStore"
 import type { Message } from "@/features/chat/chat.model"
-import { Box, Flex, ScrollArea, Text } from "@chakra-ui/react"
+import { Box, Flex, ScrollArea, Spinner, Text } from "@chakra-ui/react"
 import { TypingIndicatorSummary } from "./typing/TypingIndicatorSummary"
 import { useLayoutEffect, useRef } from "react"
 import { useMessage } from "@/features/chat/hooks/useMessage"
@@ -15,8 +15,6 @@ const BOTTOM_THRESHOLD = 100
 
 const ChatMessage = ({ messages }: Props) => {
     const user = useAuthStore((state) => state.user)
-
-    console.log(messages)
 
     const {
         fetchNextPage,
@@ -33,57 +31,57 @@ const ChatMessage = ({ messages }: Props) => {
 
     const isAtBottomRef = useRef(true)
 
-    //   Initial scroll to bottom
+    // Initial scroll to bottom
+    useLayoutEffect(() => {
+        const el = viewportRef.current
+        if (!el) return
+
+        el.scrollTop = el.scrollHeight
+    }, [])
+
+    // Handle scroll retention + auto scroll
     useLayoutEffect(() => {
         const el = viewportRef.current
         if (!el) return
 
         requestAnimationFrame(() => {
-            el.scrollTop = el.scrollHeight
-        })
-    }, [])
-
-    //  Maintain scroll position
-    useLayoutEffect(() => {
-        const el = viewportRef.current
-        if (!el) return
-
-        //   Restoring after loading older messages
-        if (loadingOlderRef.current) {
-            requestAnimationFrame(() => {
+            // Restore scroll position after loading old messages
+            if (loadingOlderRef.current) {
                 const newScrollHeight = el.scrollHeight
 
                 const heightDiff =
-                    newScrollHeight - previousScrollHeightRef.current
+                    newScrollHeight -
+                    previousScrollHeightRef.current
 
                 el.scrollTop =
-                    previousScrollTopRef.current + heightDiff
+                    previousScrollTopRef.current +
+                    heightDiff
 
                 loadingOlderRef.current = false
-            })
 
-            return
-        }
+                return
+            }
 
-        //  Auto-scroll for new incoming messages
-        if (isAtBottomRef.current) {
-            requestAnimationFrame(() => {
+            // Auto scroll when already near bottom
+            if (isAtBottomRef.current) {
                 el.scrollTop = el.scrollHeight
-            })
-        }
-    }, [])
+            }
+        })
+    }, [messages])
 
     const handleScroll = async (
         e: React.UIEvent<HTMLDivElement>
     ) => {
         const el = e.currentTarget
 
-        //   Detect if user near bottom
+        // Track if user is near bottom
         isAtBottomRef.current =
-            el.scrollHeight - el.scrollTop - el.clientHeight <
+            el.scrollHeight -
+                el.scrollTop -
+                el.clientHeight <
             BOTTOM_THRESHOLD
 
-        //   Load older messages
+        // Load older messages
         if (
             el.scrollTop <= TOP_THRESHOLD &&
             hasNextPage &&
@@ -113,17 +111,33 @@ const ChatMessage = ({ messages }: Props) => {
                 }}
             >
                 <ScrollArea.Content>
-                    <Box className="space-y-4! p-4" pr={6}>
+                    <Box className="space-y-4! p-4 relative" pr={6}>
+                        {isFetchingNextPage && (
+                            <Box position="absolute" top={0} w="100%" py={2} textAlign="center">
+                                {/* <Text fontSize="sm" color="fg.muted">
+                                    Loading older messages...
+                                </Text> */}
+                                <Spinner size="md" />
+                            </Box>
+                        )}
+                        {!hasNextPage && messages.length > 30 && (
+                            <Box textAlign="center" py={2}>
+                                <Text fontSize="sm" color="fg.muted">
+                                    No more messages
+                                </Text>
+                            </Box>
+                        )}
                         {messages.map((msg) => {
                             const isMine =
                                 msg.sender_id === user?.user_id
 
                             return (
+                                
                                 <div
                                     key={msg.message_id}
                                     className={`flex ${
                                         isMine
-                                            ? "justify-end"
+                                            ? "justify-end" 
                                             : "justify-start"
                                     }`}
                                 >

@@ -1,11 +1,11 @@
 import { useAuthStore } from "@/auth-layout/store/useAuthStore";
 import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember"
-import { Avatar, Box, defineStyle, Flex, Heading, ScrollArea, Stack, Text, Float, Circle } from "@chakra-ui/react"
+import { Avatar, Box, defineStyle, Flex, Heading, ScrollArea, Stack, Text, Float, Circle, Badge } from "@chakra-ui/react"
 import { useConversation } from "../../hooks/useConversation";
 // import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import Empty from "@/shared/components/EmptyState";
 import { LuMessageCircleQuestion } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatMessageDate } from "@/lib/formatDate";
 // import "@aejkatappaja/phantom-ui";
 import ConversationLoader from "./components/ConversationLoader";
@@ -24,6 +24,8 @@ const ChatSidebar = () => {
 
 
     const { workspaceMembers } = useWorkspaceMember();
+
+    const { conversation_id } = useParams();
 
     const user = useAuthStore(state => state.user);
     const onlineUsers = useChatStore(state => state.onlineUsers);
@@ -100,6 +102,7 @@ const ChatSidebar = () => {
                                 <Box
                                     cursor={'pointer'} 
                                     _hover={{background: 'bg.muted'}} 
+                                    background={Number(conversation_id) == item.conversation_id ? 'bg.muted' : 'bg'}
                                     py={2} 
                                     px={3} 
                                     rounded={'md'}
@@ -127,13 +130,27 @@ const ChatSidebar = () => {
                                                 <Text fontSize={'sm'} fontWeight={'semibold'}>
                                                     {item.full_name}
                                                 </Text>
-                                                <Text fontSize={'xs'} fontWeight={''} color={'fg.muted'}>
+                                                <Text 
+                                                    fontSize={'xs'} 
+                                                    fontWeight={''} 
+                                                    color={'fg.muted'}
+                                                >
                                                     { formatMessageDate(new Date(item.last_message_at)) }
                                                 </Text>
                                             </Flex>
-                                            <Text fontSize={'xs'} color={'fg.muted'}>
-                                                {item.last_message}
-                                            </Text>
+                                            <Flex justifyContent={'space-between'} alignItems={'center'}>
+                                                <Text 
+                                                    fontSize={'xs'} 
+                                                    color={item.unread_count > 0 ? 'fg' : 'fg.muted'}
+                                                >
+                                                    {item.last_message}
+                                                </Text>
+                                                {item.unread_count !== 0 && (
+                                                    <Badge variant={'solid'} rounded={'full'}>
+                                                        {item.unread_count}
+                                                    </Badge>
+                                                )}
+                                            </Flex>
                                         </Flex>
 
                                     </Flex>

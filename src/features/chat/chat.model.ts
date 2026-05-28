@@ -6,10 +6,13 @@
 
 export interface Conversation {
     conversation_id: number,
+    sender_id: number,
     user_id: number,
     full_name: string,
+    last_message_id: number,
     last_message: string,
     last_message_at: string
+    unread_count: number
     created_at: string
 }
 
@@ -25,3 +28,5 @@ export interface Message {
     full_name: string
     email: string
 }
+
+

@@ -1,41 +1,48 @@
 import {  Flex } from "@chakra-ui/react"
 import ChatHeader from "./components/ChatHeader"
 import { useMessage } from "../../hooks/useMessage"
-// import LoadingSpinner from "@/shared/components/LoadingSpinner"
 import ChatMessage from "./components/ChatMessage"
 import ChatInput from "./components/ChatInput"
 import { useParams } from "react-router-dom"
-// import { useAuthStore } from "@/auth-layout/store/useAuthStore"
 import { useChatSocket } from "../../hooks/useChatSocket"
 import { useConversationDetail } from "../../hooks/useConversation"
+import { useUpdateLastSeenMessage } from "../../hooks/useUpdateLastSeenMessage"
+import { useEffect } from "react"
 
 
 
 const ChatRoom = () => {
 
     const { conversation_id, receiver_id } = useParams()
-    // const user = useAuthStore((s) => s.user)
 
     const isNewChat = !conversation_id;
 
     useChatSocket(
-        isNewChat ? undefined : conversation_id,
-        // user?.user_id
+        isNewChat ? undefined : conversation_id
     )
 
     const { messages, error } = useMessage();
 
     const { conversation } = useConversationDetail();
 
-        const targetReceiverId = isNewChat
-        ? receiver_id
-        : String(conversation?.user_id);
+    const { updateLastSeenMessageMutation } = useUpdateLastSeenMessage();
 
-    // if (isPending) return (
-    //     <Center w={'full'}>
-    //         <LoadingSpinner />
-    //     </Center>
-    // );
+    const targetReceiverId = isNewChat
+    ? receiver_id
+    : String(conversation?.user_id);
+
+    useEffect(() => {
+        if (!conversation?.last_message_id) return;
+
+        updateLastSeenMessageMutation({
+            conversation_id: conversation.conversation_id,
+            last_read_message_id: conversation.last_message_id
+        });
+    }, [
+        conversation?.conversation_id,
+        conversation?.last_message_id,
+        updateLastSeenMessageMutation
+    ]);
 
     if (error) return <p>Failed to load messages</p>
 
@@ -44,7 +51,7 @@ const ChatRoom = () => {
         
             <Flex direction={'column'} gap={4} flex={1}>
 
-                <ChatHeader />
+                <ChatHeader receiver_id={Number(targetReceiverId ?? 0)} />
                 <ChatMessage messages={messages ?? []} />
 
                 {targetReceiverId && (

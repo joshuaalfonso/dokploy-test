@@ -7,7 +7,8 @@ export const useTyping = (
     sender_id: number,
     receiver_id: number,
 ) => {
-const timeoutRef  = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    const timeoutRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const emitTyping = () => {
 

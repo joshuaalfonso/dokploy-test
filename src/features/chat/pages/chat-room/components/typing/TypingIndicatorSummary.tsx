@@ -12,7 +12,7 @@ export const TypingIndicatorSummary = () => {
     .filter((id) => typingUsers[Number(id)])
     .map(Number);
 
-    console.log(typingUserIds)
+    // console.log(typingUserIds)
 
   if (typingUserIds.length === 0) return null;
 

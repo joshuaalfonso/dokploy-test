@@ -24,44 +24,44 @@ export const useInboxSocket = () => {
 
     socket.on("users:online", setOnlineUsers);
 
-    const conversationUpdateHandler = (message: Conversation) => {
-    //   console.log(message)
+    const conversationUpdateHandler = ({conversation}: {conversation: Conversation}) => {
+        //   console.log(conversation)
 
         queryClient.setQueryData(
             ["conversations", user_id],
             (old: Conversation[] | undefined) => {
-                if (!Array.isArray(old)) return [];
+            // console.log('old inbox: ' + old)
+            if (!Array.isArray(old)) return [];
 
-                return old.map(c =>
-                c.conversation_id == message.conversation_id
-                    ? { 
-                        ...c, 
-                        last_message: 
-                        message.last_message,
-                        last_message_at: message.last_message_at
-                    }
-                    : c
-                );
+            const filtered = old.filter(
+                c => c.conversation_id != conversation.conversation_id
+            )
+
+            return [conversation, ...filtered]
+
             }
-        );
+        )
 
         if (document.visibilityState === "visible") return;
 
         if ("Notification" in window && Notification.permission === "granted") {
             new Notification("New Message", {
-            body: message.last_message,
-            icon: "/vite.svg", // optional but recommended
+                body: conversation.last_message,
+                icon: "/vite.svg", 
             });
         }
 
     }
 
     socket.on("conversation:new", (conv: Message) => {
-        queryClient.setQueryData(["conversations"], (old: Conversation[] = []) => [
-            conv,
-            ...old
-        ])
+        // queryClient.setQueryData(["conversations"], (old: Conversation[] = []) => [
+        //     conv,
+        //     ...old
+        // ])
+
+        console.log(conv)
     })
+    
 
     socket.on("conversation:update", conversationUpdateHandler)
 

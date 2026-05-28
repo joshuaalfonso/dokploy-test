@@ -8,6 +8,7 @@ import { useState } from "react"
 
 
 const ChatInput = ({ receiver_id }: { receiver_id: string }) => {
+
     const user = useAuthStore((s) => s.user);
 
     const [text, setText] = useState("")
