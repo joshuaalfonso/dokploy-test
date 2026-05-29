@@ -17,15 +17,9 @@ export const useConversationSocket = (
 
   const queryClient = useQueryClient();
 
-
-  // const user_id = useAuthStore(state => state.user?.user_id)
-
   const setTyping = useChatStore((s) => s.setTyping)
-  // const setOnlineUsers = useChatStore((s) => s.setOnlineUsers)
 
   const handler = ({message}: {message: Message, conversation: Conversation}) => {
-    // console.log(message)
-    // console.log(conversation)
 
     try {
 

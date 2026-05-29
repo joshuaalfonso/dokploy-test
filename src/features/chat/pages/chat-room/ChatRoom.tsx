@@ -25,7 +25,7 @@ const ChatRoom = () => {
 
     const { conversation } = useConversationDetail();
 
-    console.log(conversation)
+    // console.log(conversation)
 
     const { updateLastSeenMessageMutation } = useUpdateLastSeenMessage();
 

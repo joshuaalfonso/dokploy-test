@@ -6,11 +6,15 @@ type ChatStore = {
 
   setTyping: (userId: number, value: boolean) => void
   setOnlineUsers: (users: number[]) => void
+
+  selectedConversationId?: number;
+  setSelectedConversationId: (id: number) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
   typingUsers: {},
   onlineUsers: [],
+  selectedConversationId: undefined,
 
   setTyping: (userId, value) =>
     set((state) => ({
@@ -21,4 +25,7 @@ export const useChatStore = create<ChatStore>((set) => ({
     })),
 
   setOnlineUsers: (users) => set({ onlineUsers: users }),
+
+  setSelectedConversationId: (id) =>
+        set({ selectedConversationId: id }),
 }))
