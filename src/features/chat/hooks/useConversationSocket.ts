@@ -46,21 +46,6 @@ export const useConversationSocket = (
         }
       })
 
-      // queryClient.setQueryData(
-      //   ["conversations", user_id],
-      //   (old: Conversation[] | undefined) => {
-      //     // console.log('old inbox: ' + old)
-      //     if (!Array.isArray(old)) return [];
-
-      //     const filtered = old.filter(
-      //       c => c.conversation_id != conversation.conversation_id
-      //     )
-
-      //     return [conversation, ...filtered]
-
-      //   }
-      // )
-
     } catch (e) {
       console.error("setQueryData error:", e)
     }
@@ -85,10 +70,10 @@ export const useConversationSocket = (
 
     return () => {
       socket.emit("conversation:leave", conversationId)
-      socket.off("message:receive")
+      socket.off("message:receive", handler)
       socket.off("typing:start")
       socket.off("typing:stop");
     }
-  }, [conversationId, queryClient])
+  }, [conversationId])
 }
 
