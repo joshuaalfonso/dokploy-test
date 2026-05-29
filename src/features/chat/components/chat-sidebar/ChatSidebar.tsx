@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/auth-layout/store/useAuthStore";
 import { useWorkspaceMember } from "@/features/workspace-member/hooks/useWorkspaceMember"
-import { Avatar, Box, defineStyle, Flex, Heading, ScrollArea, Stack, Text, Float, Circle, Badge } from "@chakra-ui/react"
+import { Avatar, Box, defineStyle, Flex, Heading, ScrollArea, Stack, Text, Float, Circle, Status } from "@chakra-ui/react"
 import { useConversation } from "../../hooks/useConversation";
 // import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import Empty from "@/shared/components/EmptyState";
@@ -102,9 +102,9 @@ const ChatSidebar = () => {
 
                             {enrichedConversations?.map(item => {
 
-                                const unreadCount =
-                                    item.last_message_id -
-                                    item.last_read_message_id;
+                                // const unreadCount =
+                                //     item.last_message_id -
+                                //     item.last_read_message_id;
 
                                 return (
                                     <Box
@@ -147,16 +147,30 @@ const ChatSidebar = () => {
                                                     </Text>
                                                 </Flex>
                                                 <Flex justifyContent={'space-between'} alignItems={'center'}>
-                                                    <Text 
-                                                        fontSize={'xs'} 
-                                                        color={unreadCount > 0 ? 'fg' : 'fg.muted'}
-                                                    >
-                                                        { user?.user_id == item.sender_id && 'You: ' } {item.last_message}
-                                                    </Text>
-                                                    {unreadCount >= 1 && (
-                                                        <Badge variant={'solid'} rounded={'full'}>
-                                                            {unreadCount}
-                                                        </Badge>
+                                                    {item.unread_count > 1 
+                                                    ? (
+                                                        <Text 
+                                                            fontSize={'xs'} 
+                                                            color={item.unread_count > 1 ? 'fg' : 'fg.muted'}
+                                                        >
+                                                            { item.unread_count + ' new messages' }
+                                                        </Text>
+                                                        ) 
+                                                    : (
+                                                            <Text 
+                                                                fontSize={'xs'} 
+                                                                color={item.unread_count > 0 ? 'fg' : 'fg.muted'}
+                                                            >
+                                                                { user?.user_id == item.sender_id && 'You: ' } {item.last_message}
+                                                            </Text>
+                                                    ) }
+                                                    {item.unread_count > 0 && (
+                                                        // <Badge variant={'solid'} rounded={'full'}>
+                                                        //     {item.unread_count}
+                                                        // </Badge>
+                                                        <Status.Root colorPalette="blue">
+                                                            <Status.Indicator />
+                                                        </Status.Root>
                                                     )}
                                                 </Flex>
                                             </Flex>

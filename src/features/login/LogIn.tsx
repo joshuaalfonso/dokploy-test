@@ -40,7 +40,7 @@ const LogIn = () => {
                     // setUser(response.user)
                     // setToken(response.token)
                     setAuth(response.user, response.token)
-                    console.log(response)
+                    // console.log(response)
                 },
                 onError: (err) => {
                     console.log(err);

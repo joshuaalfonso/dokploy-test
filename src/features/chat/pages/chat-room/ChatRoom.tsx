@@ -25,7 +25,7 @@ const ChatRoom = () => {
 
     const { conversation } = useConversationDetail();
 
-    // console.log(conversation)
+    console.log(conversation)
 
     const { updateLastSeenMessageMutation } = useUpdateLastSeenMessage();
 
@@ -35,6 +35,7 @@ const ChatRoom = () => {
 
     useEffect(() => {
         if (!conversation?.last_message_id || !conversation?.conversation_id) return;
+        if (conversation?.last_message_id === conversation?.last_read_message_id) return;
 
         updateLastSeenMessageMutation({
             conversation_id: conversation.conversation_id,
@@ -43,6 +44,7 @@ const ChatRoom = () => {
     }, [
         conversation?.conversation_id,
         conversation?.last_message_id,
+        conversation?.last_read_message_id,
         updateLastSeenMessageMutation
     ]);
 

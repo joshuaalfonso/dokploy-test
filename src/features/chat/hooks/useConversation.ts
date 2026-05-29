@@ -34,16 +34,17 @@ export const useConversation = () => {
 export const useConversationDetail = () => {
 
     const { conversation_id } = useParams();
+    const user_id = useAuthStore((state) => state.user?.user_id);
 
     const query = useQuery({
-        queryKey: ["conversation", conversation_id],
+        queryKey: ["conversation", conversation_id, user_id],
         queryFn: async () => {
             if (!conversation_id) {
                 throw new Error("ID is required");
             }
             return getConversationDetailApi(Number(conversation_id));
         },
-        enabled: !!conversation_id,
+        enabled: !!conversation_id && !!user_id,
         staleTime: 1000 * 60 * 5,
         gcTime: 1000 * 60 * 10,
     });
