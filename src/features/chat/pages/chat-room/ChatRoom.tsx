@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom"
 import { useConversationDetail } from "../../hooks/useConversation"
 import { useUpdateLastSeenMessage } from "../../hooks/useUpdateLastSeenMessage"
 import { useEffect } from "react"
-import { useConversationSocket } from "../../hooks/useConversationSocket"
+import { useConversationSocket } from "../../socket/useConversationSocket"
 
 
 

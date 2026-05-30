@@ -1,3 +1,4 @@
+import type { ApiResponse } from "@/shared/model/apiResponse.model"
 
 
 
@@ -15,6 +16,7 @@ export interface Conversation {
     last_read_message_id: number
     unread_count: number
     created_at: string
+    is_online: boolean
 }
 
 
@@ -31,3 +33,6 @@ export interface Message {
 }
 
 
+export interface CreateConversationResponse extends ApiResponse {
+    conversation_id: Conversation['user_id']
+} 

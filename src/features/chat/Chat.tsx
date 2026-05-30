@@ -1,6 +1,7 @@
 
 import { Flex} from "@chakra-ui/react"
-import ChatInbox from "./components/ChatInbox"
+import ChatInbox from "./components/chat-inbox/ChatInbox"
+import ChatMessagePannel from "./components/chat-message-panel/ChatMessagePannel"
 
 // import ChatSidebar from "./components/chat-sidebar/ChatSidebar";
 // import { Outlet } from "react-router-dom";
@@ -24,6 +25,8 @@ const Chat = () => {
                 <ChatInbox />
 
                 {/* <Outlet /> */}
+
+                <ChatMessagePannel />
 
             </Flex>
         

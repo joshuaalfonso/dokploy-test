@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom"
 import Sidebar from "./components/sidebar/Sidebar"
 import Header from "./components/header/Header"
 import { useEffect } from "react"
-import { useChatSocket } from "@/features/chat/hooks/useChatSocket"
+import { useChatSocket } from "@/features/chat/socket/useChatSocket"
 
 
 const Layout = () => {
@@ -19,7 +19,6 @@ const Layout = () => {
 
     <div className="flex h-svh">
 
-        
       <Sidebar />
 
       <div className="min-h-full overflow-auto flex-1">

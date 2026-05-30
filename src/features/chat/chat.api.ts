@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import type { Conversation, Message } from "./chat.model";
+import type { Conversation, CreateConversationResponse, Message } from "./chat.model";
 import type { User } from "../signup/signUp.model";
 import type { ApiResponse } from "@/shared/model/apiResponse.model";
 
@@ -29,5 +29,10 @@ export const getConversationDetailApi = async (conversation_id: Conversation['co
 export const updateLastSeenMessageApi = async (data: LastSeenMessageUpdate) => 
 {
     const res = await api.put<ApiResponse>(`/${TABLE_NAME}/last-seen`, data);
+    return res.data;
+}
+
+export const createConversationApi = async (receiver_id: User['user_id']) => {
+    const res = await api.post<CreateConversationResponse>(`/${TABLE_NAME}`, {receiver_id});
     return res.data;
 }
